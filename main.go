@@ -31,6 +31,17 @@ func main() {
 	r.Get("/products", func(w http.ResponseWriter, r *http.Request) {
 		page(productList(products)).Render(r.Context(), w)
 	})
+	r.Post("/products", func(w http.ResponseWriter, r *http.Request) {
+		r.ParseForm()
 
+		newProduct := Product{
+			Name: r.FormValue("name"),
+			GTIN: r.FormValue("gtin"),
+		}
+
+		products = append(products, newProduct)
+
+		page(productList(products)).Render(r.Context(), w)
+	})
 	http.ListenAndServe(":8080", r)
 }

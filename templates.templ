@@ -17,6 +17,11 @@ templ home() {
 templ productList(products []Product) {
     <div>
         <h1>Типы продукции</h1>
+        <form action="/products" method="post">
+            <input type="text" name="name" placeholder="Название" required/>
+            <input type="text" name="gtin" placeholder="GTIN" required/>
+            <button type="submit">Добавить</button>
+        </form>
         <ul>
             for _,p := range products {
                 <li>{p.Name} - {p.GTIN}</li>
