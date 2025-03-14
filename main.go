@@ -16,7 +16,7 @@ func main() {
 	r := chi.NewRouter()
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Главная страница Factory"))
+		w.Write([]byte("Главная страница Factory V1"))
 	})
 
 	r.Get("/products", func(w http.ResponseWriter, r *http.Request) {
