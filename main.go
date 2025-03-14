@@ -11,37 +11,39 @@ type Product struct {
 }
 
 var products = []Product{
-	{
-		Name: "Товар 1",
-		GTIN: "1234567890123",
-	},
-	{
-		Name: "Товар 2",
-		GTIN: "1234567890124",
-	},
+	{Name: "Шоколад", GTIN: "1234567890123"},
+	{Name: "Молоко", GTIN: "9876543210987"},
 }
 
 func main() {
 	r := chi.NewRouter()
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		page(home()).Render(r.Context(), w)
+		if r.Header.Get("HX-Request") == "true" {
+			home().Render(r.Context(), w)
+		} else {
+			page(home()).Render(r.Context(), w)
+		}
 	})
 
 	r.Get("/products", func(w http.ResponseWriter, r *http.Request) {
-		page(productList(products)).Render(r.Context(), w)
+		if r.Header.Get("HX-Request") == "true" {
+			productList(products).Render(r.Context(), w)
+		} else {
+			page(productList(products)).Render(r.Context(), w)
+		}
 	})
+
 	r.Post("/products", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
-
 		newProduct := Product{
 			Name: r.FormValue("name"),
 			GTIN: r.FormValue("gtin"),
 		}
-
 		products = append(products, newProduct)
-
-		page(productList(products)).Render(r.Context(), w)
+		w.Header().Set("Content-Type", "text/html")
+		productItems(products).Render(r.Context(), w) // Возвращаем только <ul> для Htmx
 	})
+
 	http.ListenAndServe(":8080", r)
 }

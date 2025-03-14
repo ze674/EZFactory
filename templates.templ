@@ -2,8 +2,8 @@ package main
 
 templ nav() {
     <nav>
-    <a href="/">Главная</a>
-    <a href="/products">Типы продукции</a>
+    <a href="/" hx-get="/" hx-target="#content">Главная</a>
+    <a href="/products" hx-get="/products" hx-target="#content">Типы продукции</a>
     </nav>
 }
 
@@ -14,21 +14,27 @@ templ home() {
     </div>
 }
 
+templ productItems(products []Product) {
+    <ul id="product-list">
+        for _,p := range products {
+            <li>{p.Name} - {p.GTIN}</li>
+        }
+    </ul>
+
+}
+
+
 templ productList(products []Product) {
     <div>
         <h1>Типы продукции</h1>
-        <form action="/products" method="post">
+        <form action="/products" hx-post="/products" hx-target="#product-list" hx-swap="innerHTML" method="post">
             <label for="name">Название:</label>
             <input type="text" id="name" name="name" placeholder="Название" required/>
             <label for="gtin">GTIN:</label>
             <input type="text" id="gtin" name="gtin" placeholder="GTIN" required/>
             <button type="submit">Добавить</button>
         </form>
-        <ul>
-            for _,p := range products {
-                <li>{p.Name} - {p.GTIN}</li>
-            }
-        </ul>
+        @productItems(products)
     </div>
 }
 
@@ -37,10 +43,11 @@ templ page(content templ.Component) {
     <html>
     <head>
         <title>Factory</title>
+         <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     </head>
     <body>
         @nav()
-        <div>
+        <div id="content">
         @content
         </div>
     </body>
