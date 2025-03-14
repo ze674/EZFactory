@@ -18,8 +18,10 @@ templ productList(products []Product) {
     <div>
         <h1>Типы продукции</h1>
         <form action="/products" method="post">
-            <input type="text" name="name" placeholder="Название" required/>
-            <input type="text" name="gtin" placeholder="GTIN" required/>
+            <label for="name">Название:</label>
+            <input type="text" id="name" name="name" placeholder="Название" required/>
+            <label for="gtin">GTIN:</label>
+            <input type="text" id="gtin" name="gtin" placeholder="GTIN" required/>
             <button type="submit">Добавить</button>
         </form>
         <ul>
