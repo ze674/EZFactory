@@ -10,17 +10,26 @@ type Product struct {
 	GTIN string
 }
 
-var products = []Product{}
+var products = []Product{
+	{
+		Name: "Товар 1",
+		GTIN: "1234567890123",
+	},
+	{
+		Name: "Товар 2",
+		GTIN: "1234567890124",
+	},
+}
 
 func main() {
 	r := chi.NewRouter()
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Главная страница Factory V1"))
+		page(home()).Render(r.Context(), w)
 	})
 
 	r.Get("/products", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Виды продуктов"))
+		page(productList(products)).Render(r.Context(), w)
 	})
 
 	http.ListenAndServe(":8080", r)

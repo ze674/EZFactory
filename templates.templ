@@ -1,0 +1,41 @@
+package main
+
+templ nav() {
+    <nav>
+    <a href="/">Главная</a>
+    <a href="/products">Типы продукции</a>
+    </nav>
+}
+
+templ home() {
+    <div>
+    <h1>Добро пожаловать в Factory</h1>
+    <p>Управление типами продукции</p>
+    </div>
+}
+
+templ productList(products []Product) {
+    <div>
+        <h1>Типы продукции</h1>
+        <ul>
+            for _,p := range products {
+                <li>{p.Name} - {p.GTIN}</li>
+            }
+        </ul>
+    </div>
+}
+
+templ page(content templ.Component) {
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Factory</title>
+    </head>
+    <body>
+        @nav()
+        <div>
+        @content
+        </div>
+    </body>
+    </html>
+}
