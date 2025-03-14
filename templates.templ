@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 templ nav() {
     <nav>
     <a href="/" hx-get="/" hx-target="#content">Главная</a>
@@ -16,11 +18,15 @@ templ home() {
 
 templ productItems(products []Product) {
     <ul id="product-list">
-        for _,p := range products {
-            <li>{p.Name} - {p.GTIN}</li>
+        for i, p := range products {
+
+            <li>
+                {p.Name} - {p.GTIN}
+                <button hx-delete={string(templ.URL(fmt.Sprintf("/products/%d", i)))}  hx-target="#product-list" hx-swap="innerHTML">Удалить</button>
+            </li>
+
         }
     </ul>
-
 }
 
 
