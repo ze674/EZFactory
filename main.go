@@ -1,22 +1,42 @@
 package main
 
 import (
+	"database/sql"
 	"github.com/go-chi/chi/v5"
+	_ "github.com/mattn/go-sqlite3"
+	"log"
 	"net/http"
 	"strconv"
 )
 
 type Product struct {
+	ID   int
 	Name string
 	GTIN string
 }
 
-var products = []Product{
-	{Name: "Шоколад", GTIN: "1234567890123"},
-	{Name: "Молоко", GTIN: "9876543210987"},
-}
+var db *sql.DB
 
 func main() {
+	var err error
+	db, err = sql.Open("sqlite3", "./factory.db")
+	if err != nil {
+		log.Fatal("Ошибка подключения к БД ", err)
+	}
+	defer db.Close()
+
+	//Создание таблицы если её нет
+	_, err = db.Exec(`
+	CREATE TABLE IF NOT EXISTS products (
+	    id INTEGER PRIMARY KEY AUTOINCREMENT,
+	    name TEXT NOT NULL,
+	    gtin TEXT NOT NULL 
+	)
+	`)
+	if err != nil {
+		log.Fatal("Ошибка создания таблицы ", err)
+	}
+
 	r := chi.NewRouter()
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
@@ -28,6 +48,10 @@ func main() {
 	})
 
 	r.Get("/products", func(w http.ResponseWriter, r *http.Request) {
+		products, err := getProducts()
+		if err != nil {
+			http.Error(w, "Ошибка получения списка продуктов "+err.Error(), http.StatusInternalServerError)
+		}
 		if r.Header.Get("HX-Request") == "true" {
 			productList(products).Render(r.Context(), w)
 		} else {
@@ -59,4 +83,24 @@ func main() {
 	})
 
 	http.ListenAndServe(":8080", r)
+}
+
+func getProducts() ([]Product, error) {
+	rows, err := db.Query("SELECT id,name,gtin FROM products")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var products []Product
+	for rows.Next() {
+		var p Product
+		err := rows.Scan(&p.ID, &p.Name, &p.GTIN)
+		if err != nil {
+			return nil, err
+		}
+		products = append(products, p)
+	}
+
+	return products, nil
 }
