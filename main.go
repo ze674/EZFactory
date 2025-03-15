@@ -88,9 +88,21 @@ func main() {
 			http.Error(w, "Invalid product ID", http.StatusBadRequest)
 			return
 		}
-		if id >= 0 && id < len(products) {
-			products = append(products[:id], products[id+1:]...)
+
+		deleted, err := deleteProduct(id)
+		if err != nil {
+			http.Error(w, "Ошибка удаления продукта "+err.Error(), http.StatusInternalServerError)
 		}
+
+		if !deleted {
+			http.Error(w, "Продукт не найден", http.StatusNotFound)
+		}
+
+		products, err := getProducts()
+		if err != nil {
+			http.Error(w, "Ошибка получения продуктов"+err.Error(), http.StatusInternalServerError)
+		}
+
 		productItems(products).Render(r.Context(), w)
 	})
 
@@ -136,4 +148,20 @@ func addProduct(p Product) error {
 
 	return nil
 
+}
+
+func deleteProduct(id int) (bool, error) {
+	query := "DELETE FROM products WHERE id = ?"
+
+	result, err := db.Exec(query, id)
+	if err != nil {
+		return false, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+
+	return rowsAffected > 0, nil
 }

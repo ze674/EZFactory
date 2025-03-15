@@ -20,10 +20,10 @@ templ home() {
 
 templ productItems(products []Product) {
     <ul id="product-list" class="space-y-2">
-        for i, p := range products {
+        for _, p := range products {
             <li class="flex justify-between items-center p-4 bg-gray-100 rounded-lg">
                 {p.Name} - {p.GTIN}
-                <button hx-delete={string(templ.URL(fmt.Sprintf("/products/%d", i)))}  hx-target="#product-list" hx-swap="innerHTML"
+                <button hx-delete={string(templ.URL(fmt.Sprintf("/products/%d", p.ID)))}  hx-target="#product-list" hx-swap="innerHTML"
                  class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600">Удалить</button>
             </li>
 
