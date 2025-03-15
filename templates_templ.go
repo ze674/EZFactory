@@ -31,7 +31,7 @@ func nav() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<nav><a href=\"/\" hx-get=\"/\" hx-target=\"#content\">Главная</a> <a href=\"/products\" hx-get=\"/products\" hx-target=\"#content\">Типы продукции</a></nav>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<nav class=\"bg-gray-800 p-4\"><div class=\"container mx-auto flex space-x-4\"><a href=\"/\" hx-get=\"/\" hx-target=\"#content\" class=\"text-white hover:text-gray-300\">Главная</a> <a href=\"/products\" hx-get=\"/products\" hx-target=\"#content\" class=\"text-white hover:text-gray-300\">Типы продукции</a></div></nav>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -60,7 +60,7 @@ func home() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div><h1>Добро пожаловать в Factory</h1><p>Управление типами продукции</p></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div><h1 class=\"text-3xl font-bold text-gray-800 mb-4\">Добро пожаловать в Factory</h1><p class=\"text-gray-600\">Управление типами продукции</p></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -89,19 +89,19 @@ func productItems(products []Product) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<ul id=\"product-list\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<ul id=\"product-list\" class=\"space-y-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for i, p := range products {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<li class=\"flex justify-between items-center p-4 bg-gray-100 rounded-lg\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(p.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates.templ`, Line: 24, Col: 23}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates.templ`, Line: 25, Col: 23}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -114,7 +114,7 @@ func productItems(products []Product) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(p.GTIN)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates.templ`, Line: 24, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates.templ`, Line: 25, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -127,13 +127,13 @@ func productItems(products []Product) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(string(templ.URL(fmt.Sprintf("/products/%d", i))))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates.templ`, Line: 25, Col: 84}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates.templ`, Line: 26, Col: 84}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" hx-target=\"#product-list\" hx-swap=\"innerHTML\">Удалить</button></li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" hx-target=\"#product-list\" hx-swap=\"innerHTML\" class=\"bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600\">Удалить</button></li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -167,7 +167,7 @@ func productList(products []Product) templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div><h1>Типы продукции</h1><form action=\"/products\" hx-post=\"/products\" hx-target=\"#product-list\" hx-swap=\"innerHTML\" method=\"post\"><label for=\"name\">Название:</label> <input type=\"text\" id=\"name\" name=\"name\" placeholder=\"Название\" required> <label for=\"gtin\">GTIN:</label> <input type=\"text\" id=\"gtin\" name=\"gtin\" placeholder=\"GTIN\" required> <button type=\"submit\">Добавить</button></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"contaniner mx-auto p-6\"><h1 class=\"text-2xl font-bold text-gray-800 mb-6\">Виды продукции</h1><form action=\"/products\" hx-post=\"/products\" hx-target=\"#product-list\" hx-swap=\"innerHTML\" method=\"post\" class=\"mb-6 spase-y-4\"><div><label for=\"name\" class=\"block text-gray-700\">Название:</label> <input type=\"text\" id=\"name\" name=\"name\" placeholder=\"Название\" required class=\"w-full p-2 border rounded\"></div><div><label for=\"gtin\" class=\"block text-gray-700\">GTIN:</label> <input type=\"text\" id=\"gtin\" name=\"gtin\" placeholder=\"GTIN\" required class=\"w-full p-2 border rounded\"></div><button type=\"submit\" class=\"bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600\">Добавить</button></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -204,7 +204,7 @@ func page(content templ.Component) templ.Component {
 			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<!doctype html><html><head><title>Factory</title><script src=\"https://unpkg.com/htmx.org@2.0.4\"></script></head><body>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<!doctype html><html><head><title>Factory</title><script src=\"https://unpkg.com/htmx.org@2.0.4\"></script><script src=\"https://cdn.tailwindcss.com\"></script></head><body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

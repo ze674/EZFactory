@@ -3,26 +3,28 @@ package main
 import "fmt"
 
 templ nav() {
-    <nav>
-    <a href="/" hx-get="/" hx-target="#content">Главная</a>
-    <a href="/products" hx-get="/products" hx-target="#content">Типы продукции</a>
+    <nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex space-x-4">
+    <a href="/" hx-get="/" hx-target="#content" class="text-white hover:text-gray-300">Главная</a>
+    <a href="/products" hx-get="/products" hx-target="#content" class="text-white hover:text-gray-300">Типы продукции</a>
+    </div>
     </nav>
 }
 
 templ home() {
     <div>
-    <h1>Добро пожаловать в Factory</h1>
-    <p>Управление типами продукции</p>
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">Добро пожаловать в Factory</h1>
+    <p class="text-gray-600">Управление типами продукции</p>
     </div>
 }
 
 templ productItems(products []Product) {
-    <ul id="product-list">
+    <ul id="product-list" class="space-y-2">
         for i, p := range products {
-
-            <li>
+            <li class="flex justify-between items-center p-4 bg-gray-100 rounded-lg">
                 {p.Name} - {p.GTIN}
-                <button hx-delete={string(templ.URL(fmt.Sprintf("/products/%d", i)))}  hx-target="#product-list" hx-swap="innerHTML">Удалить</button>
+                <button hx-delete={string(templ.URL(fmt.Sprintf("/products/%d", i)))}  hx-target="#product-list" hx-swap="innerHTML"
+                 class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600">Удалить</button>
             </li>
 
         }
@@ -31,14 +33,18 @@ templ productItems(products []Product) {
 
 
 templ productList(products []Product) {
-    <div>
-        <h1>Типы продукции</h1>
-        <form action="/products" hx-post="/products" hx-target="#product-list" hx-swap="innerHTML" method="post">
-            <label for="name">Название:</label>
-            <input type="text" id="name" name="name" placeholder="Название" required/>
-            <label for="gtin">GTIN:</label>
-            <input type="text" id="gtin" name="gtin" placeholder="GTIN" required/>
-            <button type="submit">Добавить</button>
+    <div class="contaniner mx-auto p-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Виды продукции</h1>
+        <form action="/products" hx-post="/products" hx-target="#product-list" hx-swap="innerHTML" method="post" class="mb-6 spase-y-4">
+            <div>
+                <label for="name" class="block text-gray-700">Название:</label>
+                <input type="text" id="name" name="name" placeholder="Название" required class="w-full p-2 border rounded"/>
+            </div>
+            <div>
+                <label for="gtin" class="block text-gray-700">GTIN:</label>
+                <input type="text" id="gtin" name="gtin" placeholder="GTIN" required class="w-full p-2 border rounded"/>
+            </div>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Добавить</button>
         </form>
         @productItems(products)
     </div>
@@ -50,6 +56,7 @@ templ page(content templ.Component) {
     <head>
         <title>Factory</title>
          <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
         @nav()
