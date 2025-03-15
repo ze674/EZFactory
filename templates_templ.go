@@ -31,7 +31,7 @@ func nav() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<nav class=\"bg-gray-800 p-4\"><div class=\"container mx-auto flex space-x-4\"><a href=\"/\" hx-get=\"/\" hx-target=\"#content\" class=\"text-white hover:text-gray-300\">Главная</a> <a href=\"/products\" hx-get=\"/products\" hx-target=\"#content\" class=\"text-white hover:text-gray-300\">Типы продукции</a></div></nav>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<nav class=\"bg-gray-800 p-4\"><div class=\"container mx-auto flex space-x-4\"><a href=\"/\" hx-get=\"/\" hx-target=\"#content\" class=\"text-white hover:text-gray-300\">Главная</a> <a href=\"/products\" hx-get=\"/products\" hx-target=\"#content\" class=\"text-white hover:text-gray-300\">Виды продукции</a></div></nav>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -167,7 +167,7 @@ func productList(products []Product) templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"contaniner mx-auto p-6\"><h1 class=\"text-2xl font-bold text-gray-800 mb-6\">Виды продукции</h1><form action=\"/products\" hx-post=\"/products\" hx-target=\"#product-list\" hx-swap=\"innerHTML\" method=\"post\" class=\"mb-6 spase-y-4\"><div><label for=\"name\" class=\"block text-gray-700\">Название:</label> <input type=\"text\" id=\"name\" name=\"name\" placeholder=\"Название\" required class=\"w-full p-2 border rounded\"></div><div><label for=\"gtin\" class=\"block text-gray-700\">GTIN:</label> <input type=\"text\" id=\"gtin\" name=\"gtin\" placeholder=\"GTIN\" required class=\"w-full p-2 border rounded\"></div><button type=\"submit\" class=\"bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600\">Добавить</button></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"contaniner mx-auto p-6\"><h1 class=\"text-2xl font-bold text-gray-800 mb-6\">Виды продукции</h1><div class=\"mb-6\"><input type=\"text\" id=\"search\" name=\"search\" placeholder=\"Поиск по имени или GTIN\" class=\"w-full p-2 border rounded\" hx-get=\"/products/search\" hx-trigger=\"keyup changed delay:500ms\" hx-target=\"#product-list\" hx-swap=\"innerHTML\"></div><form action=\"/products\" hx-post=\"/products\" hx-target=\"#product-list\" hx-swap=\"innerHTML\" method=\"post\" class=\"mb-6 spase-y-4\"><div><label for=\"name\" class=\"block text-gray-700\">Название:</label> <input type=\"text\" id=\"name\" name=\"name\" placeholder=\"Название\" required class=\"w-full p-2 border rounded\"></div><div><label for=\"gtin\" class=\"block text-gray-700\">GTIN:</label> <input type=\"text\" id=\"gtin\" name=\"gtin\" placeholder=\"GTIN\" required class=\"w-full p-2 border rounded\"></div><button type=\"submit\" class=\"bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600\">Добавить</button></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

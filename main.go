@@ -59,6 +59,25 @@ func main() {
 		}
 	})
 
+	r.Get("/products/search", func(w http.ResponseWriter, r *http.Request) {
+		entered := r.URL.Query().Get("search")
+		if entered == "" {
+			products, err := getProducts()
+			if err != nil {
+				http.Error(w, "Ошибка получения продуктов"+err.Error(), http.StatusInternalServerError)
+				return
+			}
+			productItems(products).Render(r.Context(), w)
+			return
+		}
+		products, err := searchProduct(entered)
+		if err != nil {
+			http.Error(w, "Ошибка поиска"+err.Error(), http.StatusInternalServerError)
+			return
+		}
+		productItems(products).Render(r.Context(), w)
+	})
+
 	r.Post("/products", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		product := Product{
@@ -164,4 +183,25 @@ func deleteProduct(id int) (bool, error) {
 	}
 
 	return rowsAffected > 0, nil
+}
+
+func searchProduct(entered string) ([]Product, error) {
+	query := "SELECT id,name,gtin FROM products WHERE name LIKE ? OR gtin LIKE ?"
+
+	rows, err := db.Query(query, "%"+entered+"%", "%"+entered+"%")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var products []Product
+	for rows.Next() {
+		var p Product
+		err = rows.Scan(&p.ID, &p.Name, &p.GTIN)
+		if err != nil {
+			return nil, err
+		}
+		products = append(products, p)
+	}
+	return products, nil
 }

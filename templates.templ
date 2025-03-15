@@ -6,7 +6,7 @@ templ nav() {
     <nav class="bg-gray-800 p-4">
     <div class="container mx-auto flex space-x-4">
     <a href="/" hx-get="/" hx-target="#content" class="text-white hover:text-gray-300">Главная</a>
-    <a href="/products" hx-get="/products" hx-target="#content" class="text-white hover:text-gray-300">Типы продукции</a>
+    <a href="/products" hx-get="/products" hx-target="#content" class="text-white hover:text-gray-300">Виды продукции</a>
     </div>
     </nav>
 }
@@ -35,6 +35,9 @@ templ productItems(products []Product) {
 templ productList(products []Product) {
     <div class="contaniner mx-auto p-6">
         <h1 class="text-2xl font-bold text-gray-800 mb-6">Виды продукции</h1>
+        <div class="mb-6">
+        <input type="text" id="search" name="search" placeholder="Поиск по имени или GTIN" class="w-full p-2 border rounded" hx-get="/products/search" hx-trigger="keyup changed delay:500ms" hx-target="#product-list" hx-swap="innerHTML" />
+        </div>
         <form action="/products" hx-post="/products" hx-target="#product-list" hx-swap="innerHTML" method="post" class="mb-6 spase-y-4">
             <div>
                 <label for="name" class="block text-gray-700">Название:</label>
