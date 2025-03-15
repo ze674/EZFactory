@@ -61,11 +61,23 @@ func main() {
 
 	r.Post("/products", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
-		newProduct := Product{
+		product := Product{
 			Name: r.FormValue("name"),
 			GTIN: r.FormValue("gtin"),
 		}
-		products = append(products, newProduct)
+
+		err = addProduct(product)
+		if err != nil {
+			http.Error(w, "Ошибка добавления продукта "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		products, err := getProducts()
+		if err != nil {
+			http.Error(w, "Ошибка получения списка продуктов "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		w.Header().Set("Content-Type", "text/html")
 		productItems(products).Render(r.Context(), w) // Возвращаем только <ul> для Htmx
 	})
@@ -86,13 +98,16 @@ func main() {
 }
 
 func getProducts() ([]Product, error) {
-	rows, err := db.Query("SELECT id,name,gtin FROM products")
+	query := "SELECT id,name,gtin FROM products"
+
+	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	var products []Product
+
 	for rows.Next() {
 		var p Product
 		err := rows.Scan(&p.ID, &p.Name, &p.GTIN)
@@ -103,4 +118,22 @@ func getProducts() ([]Product, error) {
 	}
 
 	return products, nil
+}
+
+func addProduct(p Product) error {
+	query := "INSERT INTO products (name,gtin) VALUES (?,?)"
+
+	result, err := db.Exec(query, p.Name, p.GTIN)
+	if err != nil {
+		return err
+	}
+
+	//Проверка успешности добавления
+	_, err = result.LastInsertId()
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }
