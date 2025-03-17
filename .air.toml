@@ -1,10 +1,12 @@
-root = "."
+root = "./cmd/factory"
 tmp_dir = "tmp"
 
 [build]
-cmd = "templ generate && go build -o ./tmp/main.exe ."
+cmd = "templ generate && go build -o ./tmp/main.exe ./cmd/factory"
 bin = "./tmp/main.exe"
 include_ext = ["go", "templ"]
+# Директории, которые нужно включить
+include_dir = ["cmd", "pkg", "templates"]
 exclude_dir = ["tmp"]
 exclude_file = ["templates_templ.go"]
 delay = 1000
