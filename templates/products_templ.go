@@ -70,33 +70,46 @@ func ProductItems(products []models.Product) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
-			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/products/%d/label", p.ID)))
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/products/%d/add-task", p.ID)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/products.templ`, Line: 16, Col: 84}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/products.templ`, Line: 16, Col: 87}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" hx-target=\"#product-list\" hx-swap=\"innerHTML\" class=\"bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600\">Управление этикеткой</button> <button hx-delete=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" hx-target=\"#product-list\" hx-swap=\"innerHTML\" class=\"bg-green-500 text-white px-3 py-1 rounded  hover:bg-green-600\">Создать задание</button> <button hx-get=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 string
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(string(templ.URL(fmt.Sprintf("/products/%d", p.ID))))
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/products/%d/label", p.ID)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/products.templ`, Line: 17, Col: 92}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/products.templ`, Line: 17, Col: 84}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" hx-target=\"#product-list\" hx-swap=\"innerHTML\" class=\"bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600\">Удалить</button></div></li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" hx-target=\"#product-list\" hx-swap=\"innerHTML\" class=\"bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600\">Управление этикеткой</button> <button hx-delete=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var6 string
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(string(templ.URL(fmt.Sprintf("/products/%d", p.ID))))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/products.templ`, Line: 18, Col: 92}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" hx-target=\"#product-list\" hx-swap=\"innerHTML\" class=\"bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600\">Удалить</button></div></li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</ul>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</ul>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -120,12 +133,12 @@ func ProductList(products []models.Product) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var6 == nil {
-			templ_7745c5c3_Var6 = templ.NopComponent
+		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var7 == nil {
+			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"container mx-auto p-6\"><h1 class=\"text-2xl font-bold text-gray-800 mb-6\">Виды продукции</h1><div class=\"mb-6\"><input type=\"text\" id=\"search\" name=\"search\" placeholder=\"Поиск по имени или GTIN\" class=\"w-full p-2 border rounded\" hx-get=\"/products/search\" hx-trigger=\"keyup changed delay:500ms\" hx-target=\"#product-list\" hx-swap=\"innerHTML\"></div><button hx-get=\"/products/add-form\" hx-target=\"#add-product-form\" hx-swap=\"innerHTML\" class=\"bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4\">Добавить продукт</button><div id=\"add-product-form\" class=\"mb-6\"></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"container mx-auto p-6\"><h1 class=\"text-2xl font-bold text-gray-800 mb-6\">Виды продукции</h1><div class=\"mb-6\"><input type=\"text\" id=\"search\" name=\"search\" placeholder=\"Поиск по имени или GTIN\" class=\"w-full p-2 border rounded\" hx-get=\"/products/search\" hx-trigger=\"keyup changed delay:500ms\" hx-target=\"#product-list\" hx-swap=\"innerHTML\"></div><button hx-get=\"/products/add-form\" hx-target=\"#add-product-form\" hx-swap=\"innerHTML\" class=\"bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4\">Добавить продукт</button><div id=\"add-product-form\" class=\"mb-6\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -133,7 +146,7 @@ func ProductList(products []models.Product) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

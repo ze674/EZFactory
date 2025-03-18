@@ -16,6 +16,9 @@ func SetupRoutes(r *chi.Mux) {
 	r.Post("/products/{id}/label", UpdateLabelHandler)
 	r.Get("/products/add-form", AddFormHandler)
 	r.Get("/empty", EmptyHandler)
+	//Маршруты для заданий
+	r.Get("/products/{id}/add-task", ShowAddTaskForm)
+	r.Post("/products/{id}/add-task", AddTaskHandler)
 }
 
 // Здесь можно определить функции-обработчики, если они универсальны

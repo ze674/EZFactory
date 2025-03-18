@@ -151,3 +151,20 @@ func UpdateLabelData(id int, labelData string) error {
 
 	return nil
 }
+
+func AddTask(task models.Task) error {
+	query := "INSERT INTO tasks (product_id, date, batch_number, status) VALUES (?, ?, ?, ?)"
+
+	result, err := DB.Exec(query, task.ProductID, task.Date, task.BatchNumber, task.Status)
+	if err != nil {
+		return err
+	}
+
+	// Проверка успешности добавления
+	_, err = result.LastInsertId()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

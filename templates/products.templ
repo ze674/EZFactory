@@ -13,6 +13,7 @@ templ ProductItems(products []models.Product) {
                     <span>{p.Name} - {p.GTIN}</span>
                 </div>
                 <div class="space-x-2">
+                    <button hx-get={ string(fmt.Sprintf("/products/%d/add-task", p.ID)) } hx-target="#product-list" hx-swap="innerHTML" class="bg-green-500 text-white px-3 py-1 rounded  hover:bg-green-600">Создать задание</button>
                     <button hx-get={ string(fmt.Sprintf("/products/%d/label", p.ID)) } hx-target="#product-list" hx-swap="innerHTML" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Управление этикеткой</button>
                     <button hx-delete={ string(templ.URL(fmt.Sprintf("/products/%d", p.ID))) } hx-target="#product-list" hx-swap="innerHTML" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Удалить</button>
                 </div>

@@ -1,0 +1,36 @@
+package templates
+
+import (
+    "fmt"
+    "Factory/pkg/models"
+)
+
+templ AddTaskForm(product models.Product) {
+    <div class="container mx-auto p-6">
+        <h1 class="text-2xl font-bold mb-6">Создание задания для продукта: {product.Name}</h1>
+        <form action={ templ.SafeURL(templ.URL(fmt.Sprintf("/products/%d/add-task", product.ID))) } method="post" class="space-y-4">
+            <div>
+                <label for="date" class="block text-gray-700">Дата (ДД.ММ.ГГГГ):</label>
+                <input type="text" id="date" name="date" placeholder="дд.мм.гггг" required
+                       class="w-full p-2 border rounded" pattern="\d{2}\.\d{2}\.\d{4}" />
+            </div>
+            <div>
+                <label for="batch_number" class="block text-gray-700">Номер партии:</label>
+                <input type="text" id="batch_number" name="batch_number" placeholder="Номер партии" required
+                       class="w-full p-2 border rounded" />
+            </div>
+            <div>
+                <label for="status" class="block text-gray-700">Статус:</label>
+                <select id="status" name="status" class="w-full p-2 border rounded">
+                    <option value="новое">Новое</option>
+                    <option value="в работе">В работе</option>
+                    <option value="завершено">Завершено</option>
+                </select>
+            </div>
+            <div class="space-x-2">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Создать задание</button>
+                <a href="/products" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Отмена</a>
+            </div>
+        </form>
+    </div>
+}
