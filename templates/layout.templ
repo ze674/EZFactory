@@ -1,0 +1,28 @@
+package templates
+
+
+templ Nav() {
+    <nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex space-x-4">
+    <a href="/" hx-get="/" hx-target="#content" class="text-white hover:text-gray-300">Главная</a>
+    <a href="/products" hx-get="/products" hx-target="#content" class="text-white hover:text-gray-300">Виды продукции</a>
+    </div>
+    </nav>
+}
+
+templ Page(content templ.Component) {
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Factory</title>
+        <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        @Nav()
+        <div id="content">
+        @content
+        </div>
+    </body>
+    </html>
+}

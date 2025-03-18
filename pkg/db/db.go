@@ -26,7 +26,8 @@ func Init() error {
         CREATE TABLE IF NOT EXISTS products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
-            gtin TEXT NOT NULL
+            gtin TEXT NOT NULL,
+            label_data TEXT
         )
     `)
 	if err != nil {
@@ -38,7 +39,7 @@ func Init() error {
 }
 
 func GetProducts() ([]models.Product, error) {
-	query := "SELECT id,name,gtin FROM products"
+	query := "SELECT id,name,gtin,label_data FROM products"
 
 	rows, err := DB.Query(query)
 	if err != nil {
@@ -46,11 +47,11 @@ func GetProducts() ([]models.Product, error) {
 	}
 	defer rows.Close()
 
-	var products []models.Product
+	products := []models.Product{}
 
 	for rows.Next() {
 		var p models.Product
-		err := rows.Scan(&p.ID, &p.Name, &p.GTIN)
+		err := rows.Scan(&p.ID, &p.Name, &p.GTIN, &p.LabelData)
 		if err != nil {
 			return nil, err
 		}
@@ -60,10 +61,24 @@ func GetProducts() ([]models.Product, error) {
 	return products, nil
 }
 
-func AddProduct(p models.Product) error {
-	query := "INSERT INTO products (name,gtin) VALUES (?,?)"
+func GetProductByID(id int) (models.Product, error) {
+	query := "SELECT id,name,gtin,label_data FROM products WHERE id = ?"
 
-	result, err := DB.Exec(query, p.Name, p.GTIN)
+	row := DB.QueryRow(query, id)
+
+	var p models.Product
+	err := row.Scan(&p.ID, &p.Name, &p.GTIN, &p.LabelData)
+	if err != nil {
+		return p, err
+	}
+
+	return p, nil
+}
+
+func AddProduct(p models.Product) error {
+	query := "INSERT INTO products (name,gtin,label_data) VALUES (?,?,?)"
+
+	result, err := DB.Exec(query, p.Name, p.GTIN, p.LabelData)
 	if err != nil {
 		return err
 	}
@@ -103,7 +118,7 @@ func SearchProduct(entered string) ([]models.Product, error) {
 	}
 	defer rows.Close()
 
-	var products []models.Product
+	products := []models.Product{}
 	for rows.Next() {
 		var p models.Product
 		err = rows.Scan(&p.ID, &p.Name, &p.GTIN)
@@ -113,4 +128,14 @@ func SearchProduct(entered string) ([]models.Product, error) {
 		products = append(products, p)
 	}
 	return products, nil
+}
+
+func UpdateLabelData(id int, labelData string) error {
+	query := "UPDATE products SET label_data = ? WHERE id = ?"
+	_, err := DB.Exec(query, labelData, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
