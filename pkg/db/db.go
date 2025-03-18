@@ -3,8 +3,6 @@ package db
 import (
 	"Factory/pkg/models"
 	"database/sql"
-	"log"
-
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -33,8 +31,22 @@ func Init() error {
 	if err != nil {
 		return err
 	}
+	// Таблица заданий (новая)
+	_, err = DB.Exec(`
+        CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_id INTEGER NOT NULL,
+            date TEXT NOT NULL,
+            batch_number TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'новое',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (product_id) REFERENCES products(id)
+        )
+    `)
+	if err != nil {
+		return err
+	}
 
-	log.Println("Таблица products успешно создана или уже существует!")
 	return nil
 }
 
