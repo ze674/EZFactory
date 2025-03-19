@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"Factory/pkg/api"
 	"Factory/templates"
 	"github.com/go-chi/chi/v5"
 	"net/http"
@@ -17,8 +18,16 @@ func SetupRoutes(r *chi.Mux) {
 	r.Get("/products/add-form", AddFormHandler)
 	r.Get("/empty", EmptyHandler)
 	//Маршруты для заданий
+	r.Get("/tasks", TasksListHandler)
+	r.Delete("/tasks/{id}", DeleteTaskHandler)
 	r.Get("/products/{id}/add-task", ShowAddTaskForm)
 	r.Post("/products/{id}/add-task", AddTaskHandler)
+
+	//Маршруты для API
+	r.Route("/api", func(r chi.Router) {
+		r.Get("/tasks", api.GetTasksHandler)
+		r.Get("/product/{id}", api.GetProductByIDHandler)
+	})
 }
 
 // Здесь можно определить функции-обработчики, если они универсальны

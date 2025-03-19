@@ -4,6 +4,7 @@ import (
 	"Factory/pkg/models"
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
+	"time"
 )
 
 var DB *sql.DB
@@ -167,4 +168,58 @@ func AddTask(task models.Task) error {
 	}
 
 	return nil
+}
+
+func GetTasks() ([]models.Task, error) {
+	query := `
+        SELECT t.id, t.product_id, p.name, t.date, t.batch_number, t.status, t.created_at 
+        FROM tasks t
+        JOIN products p ON t.product_id = p.id
+        ORDER BY t.created_at DESC
+    `
+
+	rows, err := DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	tasks := []models.Task{}
+
+	for rows.Next() {
+		var t models.Task
+		var createdAt string
+
+		err := rows.Scan(&t.ID, &t.ProductID, &t.ProductName, &t.Date, &t.BatchNumber, &t.Status, &createdAt)
+		if err != nil {
+			return nil, err
+		}
+
+		// Преобразуем строку времени в time.Time
+		t.CreatedAt, err = time.Parse("2006-01-02 15:04:05", createdAt)
+		if err != nil {
+			// Если не удалось распарсить, используем текущее время
+			t.CreatedAt = time.Now()
+		}
+
+		tasks = append(tasks, t)
+	}
+
+	return tasks, nil
+}
+
+func DeleteTask(id int) (bool, error) {
+	query := "DELETE FROM tasks WHERE id = ?"
+
+	result, err := DB.Exec(query, id)
+	if err != nil {
+		return false, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+
+	return rowsAffected > 0, nil
 }
