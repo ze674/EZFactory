@@ -1,10 +1,8 @@
 package db
 
 import (
-	"Factory/pkg/models"
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
-	"time"
 )
 
 var DB *sql.DB
@@ -21,7 +19,22 @@ func Init() error {
 		return err
 	}
 
-	_, err = DB.Exec(`
+	err = CreateTables()
+	if err != nil {
+		return err
+	}
+
+	err = EnsureDefaultProductionLines()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CreateTables() error {
+	// Таблица продуктов
+	_, err := DB.Exec(`
         CREATE TABLE IF NOT EXISTS products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
@@ -32,194 +45,50 @@ func Init() error {
 	if err != nil {
 		return err
 	}
-	// Таблица заданий (новая)
+
+	// Таблица заданий (обновленная)
 	_, err = DB.Exec(`
-        CREATE TABLE IF NOT EXISTS tasks (
+    CREATE TABLE IF NOT EXISTS tasks (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_id INTEGER NOT NULL,
+        line_id INTEGER NOT NULL DEFAULT 1,
+        date TEXT NOT NULL,
+        batch_number TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'новое',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (product_id) REFERENCES products(id),
+        FOREIGN KEY (line_id) REFERENCES production_lines(id)
+    )
+`)
+	if err != nil {
+		return err
+	}
+
+	// Таблица производственных линий (новая)
+	_, err = DB.Exec(`
+        CREATE TABLE IF NOT EXISTS production_lines (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            product_id INTEGER NOT NULL,
-            date TEXT NOT NULL,
-            batch_number TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'новое',
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (product_id) REFERENCES products(id)
+            name TEXT NOT NULL
         )
     `)
 	if err != nil {
 		return err
 	}
 
-	return nil
-}
-
-func GetProducts() ([]models.Product, error) {
-	query := "SELECT id,name,gtin,label_data FROM products"
-
-	rows, err := DB.Query(query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	products := []models.Product{}
-
-	for rows.Next() {
-		var p models.Product
-		err := rows.Scan(&p.ID, &p.Name, &p.GTIN, &p.LabelData)
-		if err != nil {
-			return nil, err
-		}
-		products = append(products, p)
-	}
-
-	return products, nil
-}
-
-func GetProductByID(id int) (models.Product, error) {
-	query := "SELECT id,name,gtin,label_data FROM products WHERE id = ?"
-
-	row := DB.QueryRow(query, id)
-
-	var p models.Product
-	err := row.Scan(&p.ID, &p.Name, &p.GTIN, &p.LabelData)
-	if err != nil {
-		return p, err
-	}
-
-	return p, nil
-}
-
-func AddProduct(p models.Product) error {
-	query := "INSERT INTO products (name,gtin,label_data) VALUES (?,?,?)"
-
-	result, err := DB.Exec(query, p.Name, p.GTIN, p.LabelData)
-	if err != nil {
-		return err
-	}
-
-	//Проверка успешности добавления
-	_, err = result.LastInsertId()
+	// Таблица истории изменений заданий (новая)
+	_, err = DB.Exec(`
+    CREATE TABLE IF NOT EXISTS task_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        task_id INTEGER NOT NULL,
+        old_status TEXT NOT NULL,
+        new_status TEXT NOT NULL,
+        changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (task_id) REFERENCES tasks(id)
+    )
+`)
 	if err != nil {
 		return err
 	}
 
 	return nil
-
-}
-
-func DeleteProduct(id int) (bool, error) {
-	query := "DELETE FROM products WHERE id = ?"
-
-	result, err := DB.Exec(query, id)
-	if err != nil {
-		return false, err
-	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return false, err
-	}
-
-	return rowsAffected > 0, nil
-}
-
-func SearchProduct(entered string) ([]models.Product, error) {
-	query := "SELECT id,name,gtin FROM products WHERE name LIKE ? OR gtin LIKE ?"
-
-	rows, err := DB.Query(query, "%"+entered+"%", "%"+entered+"%")
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	products := []models.Product{}
-	for rows.Next() {
-		var p models.Product
-		err = rows.Scan(&p.ID, &p.Name, &p.GTIN)
-		if err != nil {
-			return nil, err
-		}
-		products = append(products, p)
-	}
-	return products, nil
-}
-
-func UpdateLabelData(id int, labelData string) error {
-	query := "UPDATE products SET label_data = ? WHERE id = ?"
-	_, err := DB.Exec(query, labelData, id)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func AddTask(task models.Task) error {
-	query := "INSERT INTO tasks (product_id, date, batch_number, status) VALUES (?, ?, ?, ?)"
-
-	result, err := DB.Exec(query, task.ProductID, task.Date, task.BatchNumber, task.Status)
-	if err != nil {
-		return err
-	}
-
-	// Проверка успешности добавления
-	_, err = result.LastInsertId()
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func GetTasks() ([]models.Task, error) {
-	query := `
-        SELECT t.id, t.product_id, p.name, t.date, t.batch_number, t.status, t.created_at 
-        FROM tasks t
-        JOIN products p ON t.product_id = p.id
-        ORDER BY t.created_at DESC
-    `
-
-	rows, err := DB.Query(query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	tasks := []models.Task{}
-
-	for rows.Next() {
-		var t models.Task
-		var createdAt string
-
-		err := rows.Scan(&t.ID, &t.ProductID, &t.ProductName, &t.Date, &t.BatchNumber, &t.Status, &createdAt)
-		if err != nil {
-			return nil, err
-		}
-
-		// Преобразуем строку времени в time.Time
-		t.CreatedAt, err = time.Parse("2006-01-02 15:04:05", createdAt)
-		if err != nil {
-			// Если не удалось распарсить, используем текущее время
-			t.CreatedAt = time.Now()
-		}
-
-		tasks = append(tasks, t)
-	}
-
-	return tasks, nil
-}
-
-func DeleteTask(id int) (bool, error) {
-	query := "DELETE FROM tasks WHERE id = ?"
-
-	result, err := DB.Exec(query, id)
-	if err != nil {
-		return false, err
-	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return false, err
-	}
-
-	return rowsAffected > 0, nil
 }

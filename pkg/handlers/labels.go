@@ -29,7 +29,7 @@ func LabelHandler(w http.ResponseWriter, r *http.Request) {
 		var data map[string]interface{}
 		err = json.Unmarshal([]byte(p.LabelData), &data)
 		if err == nil {
-			for _, key := range []string{"header", "label_name", "standard", "article", "unit_weight", "box_quantity", "box_weight"} {
+			for _, key := range []string{"header", "label_name", "standard", "article", "unit_weight", "box_quantity", "box_weight", "gtin"} {
 				if val, ok := data[key]; ok {
 					values[key] = fmt.Sprintf("%v", val)
 				} else {
@@ -58,6 +58,7 @@ func UpdateLabelHandler(w http.ResponseWriter, r *http.Request) {
 		"unit_weight":  r.FormValue("unit_weight"),
 		"box_quantity": r.FormValue("box_quantity"),
 		"box_weight":   r.FormValue("box_weight"),
+		"gtin":         r.FormValue("gtin"),
 	}
 
 	jsonData, err := json.Marshal(labelData)

@@ -6,7 +6,7 @@ import (
     "strconv"
 )
 
-templ AddTaskForm(product models.Product) {
+templ AddTaskForm(product models.Product, lines []models.ProductionLine) {
     <div class="container mx-auto p-6">
         <h1 class="text-2xl font-bold mb-6">Создание задания для продукта: {product.Name}</h1>
         <form action={ templ.SafeURL(templ.URL(fmt.Sprintf("/products/%d/add-task", product.ID))) } method="post" class="space-y-4">
@@ -20,6 +20,16 @@ templ AddTaskForm(product models.Product) {
                 <input type="text" id="batch_number" name="batch_number" placeholder="Номер партии" required
                        class="w-full p-2 border rounded" />
             </div>
+
+                        <div>
+                            <label for="line_id" class="block text-gray-700">Производственная линия:</label>
+                            <select id="line_id" name="line_id" class="w-full p-2 border rounded" required>
+                                for _, line := range lines {
+                                    <option value={ strconv.Itoa(line.ID) }>{line.Name}</option>
+                                }
+                            </select>
+                        </div>
+
             <div>
                 <label for="status" class="block text-gray-700">Статус:</label>
                 <select id="status" name="status" class="w-full p-2 border rounded">
@@ -52,6 +62,7 @@ templ TasksList(tasks []models.Task) {
                         <tr class="bg-gray-100">
                             <th class="p-2 border">ID</th>
                             <th class="p-2 border">Продукт</th>
+                            <th class="p-2 border">Линия</th>
                             <th class="p-2 border">Дата</th>
                             <th class="p-2 border">Номер партии</th>
                             <th class="p-2 border">Статус</th>
@@ -64,22 +75,42 @@ templ TasksList(tasks []models.Task) {
                             <tr>
                                 <td class="p-2 border">{strconv.Itoa(task.ID)}</td>
                                 <td class="p-2 border">{task.ProductName}</td>
+                                <td class="p-2 border">{task.LineName}</td>
                                 <td class="p-2 border">{task.Date}</td>
                                 <td class="p-2 border">{task.BatchNumber}</td>
-                                <td class="p-2 border">
-                                    if task.Status == "новое" {
-                                        <span class="bg-blue-100 text-blue-800 py-1 px-2 rounded-full">{task.Status}</span>
-                                    } else if task.Status == "в работе" {
-                                        <span class="bg-yellow-100 text-yellow-800 py-1 px-2 rounded-full">{task.Status}</span>
-                                    } else if task.Status == "завершено" {
-                                        <span class="bg-green-100 text-green-800 py-1 px-2 rounded-full">{task.Status}</span>
-                                    } else {
-                                        <span>{task.Status}</span>
-                                    }
-                                </td>
+                               <td class="p-2 border">
+                                   if task.Status == "новое" {
+                                       <span class="bg-blue-100 text-blue-800 py-1 px-2 rounded-full flex items-center justify-center">
+                                           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                           </svg>
+                                           <span>{task.Status}</span>
+                                       </span>
+                                   } else if task.Status == "в работе" {
+                                       <span class="bg-yellow-100 text-yellow-800 py-1 px-2 rounded-full flex items-center justify-center">
+                                           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                           </svg>
+                                           <span>{task.Status}</span>
+                                       </span>
+                                   } else if task.Status == "завершено" {
+                                       <span class="bg-green-100 text-green-800 py-1 px-2 rounded-full flex items-center justify-center">
+                                           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                           </svg>
+                                           <span>{task.Status}</span>
+                                       </span>
+                                   } else {
+                                       <span>{task.Status}</span>
+                                   }
+                               </td>
                                 <td class="p-2 border">{task.CreatedAt.Format("02.01.2006 15:04")}</td>
                                 <td class="p-2 border">
-                                    <a href={templ.SafeURL(fmt.Sprintf("/tasks/%d", task.ID))} class="text-blue-500 hover:underline">Детали</a>
+                                    <a href="#"
+                                       hx-get={string(templ.URL(fmt.Sprintf("/tasks/%d", task.ID)))}
+                                       hx-target="#task-list"
+                                       hx-swap="innerHTML"
+                                       class="text-blue-500 hover:underline">Детали</a>
                                     <button
                                         hx-delete={string(templ.URL(fmt.Sprintf("/tasks/%d", task.ID)))}
                                         hx-confirm="Вы уверены, что хотите удалить это задание?"

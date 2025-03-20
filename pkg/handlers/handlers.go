@@ -18,15 +18,18 @@ func SetupRoutes(r *chi.Mux) {
 	r.Get("/products/add-form", AddFormHandler)
 	r.Get("/empty", EmptyHandler)
 	//Маршруты для заданий
-	r.Get("/tasks", TasksListHandler)
-	r.Delete("/tasks/{id}", DeleteTaskHandler)
+	r.Get("/tasks", TasksListHandler)          // обработчик для просмотра списка заданий
+	r.Get("/tasks/{id}", TaskDetailsHandler)   // обработчик для просмотра деталей задания
+	r.Delete("/tasks/{id}", DeleteTaskHandler) // обработчик для удаления задания
 	r.Get("/products/{id}/add-task", ShowAddTaskForm)
 	r.Post("/products/{id}/add-task", AddTaskHandler)
+	r.Post("/tasks/{id}/status", api.UpdateTaskStatusHandler)
 
 	//Маршруты для API
 	r.Route("/api", func(r chi.Router) {
 		r.Get("/tasks", api.GetTasksHandler)
 		r.Get("/product/{id}", api.GetProductByIDHandler)
+		r.Get("/lines", api.GetProductionLinesHandler)
 	})
 }
 

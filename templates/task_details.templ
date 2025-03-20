@@ -1,0 +1,125 @@
+package templates
+
+import (
+    "fmt"
+    "Factory/pkg/models"
+    "strconv"
+)
+
+templ TaskDetails(task models.Task, history []models.TaskHistory) {
+    <div id="task-list" class="container mx-auto p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">Детали задания #{strconv.Itoa(task.ID)}</h1>
+            <button
+                hx-get="/tasks"
+                hx-target="#task-list"
+                hx-swap="innerHTML"
+                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                Вернуться к списку
+            </button>
+        </div>
+
+        <div class="bg-white shadow-md rounded p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Основная информация</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <p class="font-semibold">Продукт:</p>
+                    <p>{task.ProductName}</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Линия производства:</p>
+                    <p>{task.LineName}</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Дата:</p>
+                    <p>{task.Date}</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Номер партии:</p>
+                    <p>{task.BatchNumber}</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Статус:</p>
+                    <div class="mt-1">
+                        if task.Status == "новое" {
+                            <span class="bg-blue-100 text-blue-800 py-1 px-2 rounded-full">{task.Status}</span>
+                        } else if task.Status == "в работе" {
+                            <span class="bg-yellow-100 text-yellow-800 py-1 px-2 rounded-full">{task.Status}</span>
+                        } else if task.Status == "завершено" {
+                            <span class="bg-green-100 text-green-800 py-1 px-2 rounded-full">{task.Status}</span>
+                        } else {
+                            <span>{task.Status}</span>
+                        }
+                    </div>
+                </div>
+                <div>
+                    <p class="font-semibold">Создано:</p>
+                    <p>{task.CreatedAt.Format("02.01.2006 15:04")}</p>
+                </div>
+            </div>
+
+            <div class="mt-6 flex space-x-2">
+                <button hx-post={ string(templ.URL(fmt.Sprintf("/tasks/%d/status?status=в работе", task.ID))) }
+                        hx-target="body"
+                        hx-swap="none"
+                        class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                    Взять в работу
+                </button>
+                <button hx-post={ string(fmt.Sprintf("/tasks/%d/status?status=завершено", task.ID)) }
+                        hx-target="body"
+                        hx-swap="none"
+                        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    Завершить
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md rounded p-6">
+            <h2 class="text-xl font-semibold mb-4">История изменений</h2>
+            if len(history) == 0 {
+                <p>История изменений отсутствует</p>
+            } else {
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="p-2 border">Дата и время</th>
+                                <th class="p-2 border">Предыдущий статус</th>
+                                <th class="p-2 border">Новый статус</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            for _, record := range history {
+                                <tr>
+                                    <td class="p-2 border">{record.ChangedAt.Format("02.01.2006 15:04:05")}</td>
+                                    <td class="p-2 border">
+                                        if record.OldStatus == "новое" {
+                                            <span class="bg-blue-100 text-blue-800 py-1 px-2 rounded-full">{record.OldStatus}</span>
+                                        } else if record.OldStatus == "в работе" {
+                                            <span class="bg-yellow-100 text-yellow-800 py-1 px-2 rounded-full">{record.OldStatus}</span>
+                                        } else if record.OldStatus == "завершено" {
+                                            <span class="bg-green-100 text-green-800 py-1 px-2 rounded-full">{record.OldStatus}</span>
+                                        } else {
+                                            <span>{record.OldStatus}</span>
+                                        }
+                                    </td>
+                                    <td class="p-2 border">
+                                        if record.NewStatus == "новое" {
+                                            <span class="bg-blue-100 text-blue-800 py-1 px-2 rounded-full">{record.NewStatus}</span>
+                                        } else if record.NewStatus == "в работе" {
+                                            <span class="bg-yellow-100 text-yellow-800 py-1 px-2 rounded-full">{record.NewStatus}</span>
+                                        } else if record.NewStatus == "завершено" {
+                                            <span class="bg-green-100 text-green-800 py-1 px-2 rounded-full">{record.NewStatus}</span>
+                                        } else {
+                                            <span>{record.NewStatus}</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+}

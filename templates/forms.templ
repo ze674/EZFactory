@@ -10,6 +10,11 @@ templ LabelForm(p models.Product, values map[string]string) {
         <h1 class="text-2xl font-bold mb-6">Данные этикетки для {p.Name}</h1>
         <form action={ templ.SafeURL(templ.URL(fmt.Sprintf("/products/%d/label", p.ID))) } method="post" class="space-y-4">
             <div>
+                <label for="article" class="block text-gray-700">Артикул:</label>
+                <input type="text" id="article" name="article" value={ values["article"] } class="w-full p-2 border rounded" />
+            </div>
+
+            <div>
                 <label for="header" class="block text-gray-700">Шапка:</label>
                 <input type="text" id="header" name="header" value={ values["header"] } class="w-full p-2 border rounded" />
             </div>
@@ -21,10 +26,7 @@ templ LabelForm(p models.Product, values map[string]string) {
                 <label for="standard" class="block text-gray-700">ТУ/ГОСТ:</label>
                 <input type="text" id="standard" name="standard" value={ values["standard"] } class="w-full p-2 border rounded" />
             </div>
-            <div>
-                <label for="article" class="block text-gray-700">Артикул:</label>
-                <input type="text" id="article" name="article" value={ values["article"] } class="w-full p-2 border rounded" />
-            </div>
+
             <div>
                 <label for="unit_weight" class="block text-gray-700">Вес единицы (г):</label>
                 <input type="text" id="unit_weight" name="unit_weight" value={ values["unit_weight"] } class="w-full p-2 border rounded" />
@@ -37,8 +39,13 @@ templ LabelForm(p models.Product, values map[string]string) {
                 <label for="box_weight" class="block text-gray-700">Вес коробки (кг):</label>
                 <input type="text" id="box_weight" name="box_weight" value={ values["box_weight"] } class="w-full p-2 border rounded" />
             </div>
+             <div>
+                 <label for="gtin" class="block text-gray-700">GTIN короба:</label>
+                 <input type="text" id="gtin" name="gtin" value={ values["gtin"] } class="w-full p-2 border rounded" />
+             </div>
             <div class="space-x-2">
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Сохранить</button>
+                <a href={ templ.SafeURL(templ.URL(fmt.Sprintf("/products/%d/print", p.ID))) } class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Печать</a>
                 <a href="/products" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Отмена</a>
             </div>
         </form>
