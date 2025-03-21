@@ -14,6 +14,10 @@ func main() {
 	}
 	defer db.DB.Close()
 	r := chi.NewRouter()
+	// Обработчик для статических файлов
+	fileServer := http.FileServer(http.Dir("./static"))
+	r.Handle("/static/*", http.StripPrefix("/static/", fileServer))
+
 	handlers.SetupRoutes(r)
 
 	log.Fatal(http.ListenAndServe(":8081", r))
