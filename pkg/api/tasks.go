@@ -3,6 +3,7 @@ package api
 import (
 	"Factory/pkg/db"
 	"Factory/pkg/models"
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
@@ -80,5 +81,32 @@ func UpdateTaskStatusHandler(w http.ResponseWriter, r *http.Request) {
 	RespondWithJSON(w, http.StatusOK, Response{
 		Success: true,
 		Data:    "Статус задания успешно обновлен",
+	})
+}
+
+// GetTaskByIDHandler - обработчик для получения информации о задании по ID через API
+func GetTaskByIDHandler(w http.ResponseWriter, r *http.Request) {
+	// Получаем ID задания из URL параметров
+	taskIDStr := chi.URLParam(r, "id")
+	taskID, err := strconv.Atoi(taskIDStr)
+
+	if err != nil {
+		RespondWithError(w, http.StatusBadRequest, "Некорректный ID задания")
+		fmt.Println(err)
+		return
+	}
+
+	// Получаем информацию о задании из базы данных
+	task, err := db.GetTaskByID(taskID)
+	if err != nil {
+		RespondWithError(w, http.StatusInternalServerError, "Ошибка при получении информации о задании: "+err.Error())
+		fmt.Println(err)
+		return
+	}
+
+	// Отправляем успешный ответ
+	RespondWithJSON(w, http.StatusOK, Response{
+		Success: true,
+		Data:    task,
 	})
 }

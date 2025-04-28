@@ -57,7 +57,7 @@ func AddTaskForm(product models.Product, lines []models.ProductionLine) templ.Co
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" method=\"post\" class=\"space-y-4\"><div><label for=\"date\" class=\"block text-gray-700\">Дата (ДД.ММ.ГГГГ):</label> <input type=\"text\" id=\"date\" name=\"date\" placeholder=\"дд.мм.гггг\" required class=\"w-full p-2 border rounded\" pattern=\"\\d{2}\\.\\d{2}\\.\\d{4}\"></div><div><label for=\"batch_number\" class=\"block text-gray-700\">Номер партии:</label> <input type=\"text\" id=\"batch_number\" name=\"batch_number\" placeholder=\"Номер партии\" required class=\"w-full p-2 border rounded\"></div><div><label for=\"line_id\" class=\"block text-gray-700\">Производственная линия:</label> <select id=\"line_id\" name=\"line_id\" class=\"w-full p-2 border rounded\" required>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" method=\"post\" class=\"space-y-4\" enctype=\"multipart/form-data\"><div><label for=\"date\" class=\"block text-gray-700\">Дата (ДД.ММ.ГГГГ):</label> <input type=\"text\" id=\"date\" name=\"date\" placeholder=\"дд.мм.гггг\" required class=\"w-full p-2 border rounded\" pattern=\"\\d{2}\\.\\d{2}\\.\\d{4}\"></div><div><label for=\"batch_number\" class=\"block text-gray-700\">Номер партии:</label> <input type=\"text\" id=\"batch_number\" name=\"batch_number\" placeholder=\"Номер партии\" required class=\"w-full p-2 border rounded\"></div><div><label for=\"line_id\" class=\"block text-gray-700\">Производственная линия:</label> <select id=\"line_id\" name=\"line_id\" class=\"w-full p-2 border rounded\" required>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -69,7 +69,7 @@ func AddTaskForm(product models.Product, lines []models.ProductionLine) templ.Co
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(line.ID))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 28, Col: 73}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 31, Col: 61}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -82,7 +82,7 @@ func AddTaskForm(product models.Product, lines []models.ProductionLine) templ.Co
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(line.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 28, Col: 86}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 31, Col: 74}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -93,7 +93,7 @@ func AddTaskForm(product models.Product, lines []models.ProductionLine) templ.Co
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</select></div><div><label for=\"status\" class=\"block text-gray-700\">Статус:</label> <select id=\"status\" name=\"status\" class=\"w-full p-2 border rounded\"><option value=\"новое\">Новое</option> <option value=\"в работе\">В работе</option> <option value=\"завершено\">Завершено</option></select></div><div class=\"space-x-2\"><button type=\"submit\" class=\"bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600\">Создать задание</button> <a href=\"/products\" class=\"bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600\">Отмена</a></div></form></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</select></div><div><label for=\"status\" class=\"block text-gray-700\">Статус:</label> <select id=\"status\" name=\"status\" class=\"w-full p-2 border rounded\"><option value=\"новое\">Новое</option> <option value=\"в работе\">В работе</option> <option value=\"завершено\">Завершено</option></select></div><!-- Добавляем поле для загрузки файла --><div><label for=\"mark_codes\" class=\"block text-gray-700\">Файл с кодами маркировки (необязательно):</label> <input type=\"file\" id=\"mark_codes\" name=\"mark_codes\" class=\"w-full p-2 border rounded\" accept=\".txt,.csv\"><p class=\"text-sm text-gray-500 mt-1\">Загрузите текстовый файл с кодами маркировки (по одному коду в строке).</p></div><div class=\"space-x-2\"><button type=\"submit\" class=\"bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600\">Создать задание</button> <a href=\"/products\" class=\"bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600\">Отмена</a></div></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -144,7 +144,7 @@ func TasksList(tasks []models.Task) templ.Component {
 				var templ_7745c5c3_Var7 string
 				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(task.ID))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 76, Col: 77}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 93, Col: 77}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 				if templ_7745c5c3_Err != nil {
@@ -157,7 +157,7 @@ func TasksList(tasks []models.Task) templ.Component {
 				var templ_7745c5c3_Var8 string
 				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(task.ProductName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 77, Col: 72}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 94, Col: 72}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
@@ -170,7 +170,7 @@ func TasksList(tasks []models.Task) templ.Component {
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(task.LineName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 78, Col: 69}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 95, Col: 69}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
@@ -183,7 +183,7 @@ func TasksList(tasks []models.Task) templ.Component {
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(task.Date)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 79, Col: 65}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 96, Col: 65}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -196,7 +196,7 @@ func TasksList(tasks []models.Task) templ.Component {
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(task.BatchNumber)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 80, Col: 72}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 97, Col: 72}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 				if templ_7745c5c3_Err != nil {
@@ -214,7 +214,7 @@ func TasksList(tasks []models.Task) templ.Component {
 					var templ_7745c5c3_Var12 string
 					templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(task.Status)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 87, Col: 61}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 104, Col: 61}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 					if templ_7745c5c3_Err != nil {
@@ -232,7 +232,7 @@ func TasksList(tasks []models.Task) templ.Component {
 					var templ_7745c5c3_Var13 string
 					templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(task.Status)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 94, Col: 61}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 111, Col: 61}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 					if templ_7745c5c3_Err != nil {
@@ -250,7 +250,7 @@ func TasksList(tasks []models.Task) templ.Component {
 					var templ_7745c5c3_Var14 string
 					templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(task.Status)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 101, Col: 61}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 118, Col: 61}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 					if templ_7745c5c3_Err != nil {
@@ -268,7 +268,7 @@ func TasksList(tasks []models.Task) templ.Component {
 					var templ_7745c5c3_Var15 string
 					templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(task.Status)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 104, Col: 57}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 121, Col: 57}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 					if templ_7745c5c3_Err != nil {
@@ -286,7 +286,7 @@ func TasksList(tasks []models.Task) templ.Component {
 				var templ_7745c5c3_Var16 string
 				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(task.CreatedAt.Format("02.01.2006 15:04"))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 107, Col: 97}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 124, Col: 97}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 				if templ_7745c5c3_Err != nil {
@@ -299,7 +299,7 @@ func TasksList(tasks []models.Task) templ.Component {
 				var templ_7745c5c3_Var17 string
 				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(string(templ.URL(fmt.Sprintf("/tasks/%d", task.ID))))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 110, Col: 99}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 127, Col: 99}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 				if templ_7745c5c3_Err != nil {
@@ -312,7 +312,7 @@ func TasksList(tasks []models.Task) templ.Component {
 				var templ_7745c5c3_Var18 string
 				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(string(templ.URL(fmt.Sprintf("/tasks/%d", task.ID))))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 115, Col: 103}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/task.templ`, Line: 132, Col: 103}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 				if templ_7745c5c3_Err != nil {

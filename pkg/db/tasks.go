@@ -87,21 +87,22 @@ func GetTasksByLineID(lineID int) ([]models.Task, error) {
 	return tasks, nil
 }
 
-func AddTask(task models.Task) error {
+// pkg/db/tasks.go - обновленная функция AddTask
+func AddTask(task models.Task) (int64, error) {
 	query := "INSERT INTO tasks (product_id, line_id, date, batch_number, status) VALUES (?, ?, ?, ?, ?)"
 
 	result, err := DB.Exec(query, task.ProductID, task.LineID, task.Date, task.BatchNumber, task.Status)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	// Проверка успешности добавления
-	_, err = result.LastInsertId()
+	// Получаем ID вставленной записи
+	taskID, err := result.LastInsertId()
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return taskID, nil
 }
 
 func DeleteTask(id int) (bool, error) {

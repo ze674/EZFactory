@@ -23,13 +23,21 @@ func SetupRoutes(r *chi.Mux) {
 	r.Delete("/tasks/{id}", DeleteTaskHandler) // обработчик для удаления задания
 	r.Get("/products/{id}/add-task", ShowAddTaskForm)
 	r.Post("/products/{id}/add-task", AddTaskHandler)
-	r.Post("/tasks/{id}/status", api.UpdateTaskStatusHandler)
+	// Маршруты для кодов маркировки
+	r.Get("/tasks/{id}/mark-codes", MarkCodesListHandler)
+	r.Get("/tasks/{id}/upload-codes", UploadCodesFormHandler)
+	r.Post("/tasks/{id}/upload-codes", UploadCodesHandler)
+	r.Post("/tasks/{taskID}/mark-codes/{codeID}/mark-used", MarkCodeAsUsedHandler)
+	r.Post("/tasks/{taskID}/mark-codes/{codeID}/mark-invalid", MarkCodeAsInvalidHandler)
+	r.Post("/tasks/{taskID}/mark-codes/{codeID}/reset", ResetMarkCodeStatusHandler)
 
 	//Маршруты для API
 	r.Route("/api", func(r chi.Router) {
 		r.Get("/tasks", api.GetTasksHandler)
+		r.Get("/tasks/{id}", api.GetTaskByIDHandler)
 		r.Get("/product/{id}", api.GetProductByIDHandler)
 		r.Get("/lines", api.GetProductionLinesHandler)
+		r.Post("/tasks/{id}/status", api.UpdateTaskStatusHandler)
 	})
 }
 

@@ -90,5 +90,29 @@ func CreateTables() error {
 		return err
 	}
 
+	_, err = DB.Exec(`
+        CREATE TABLE IF NOT EXISTS mark_codes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    task_id INTEGER NOT NULL,
+    code TEXT NOT NULL UNIQUE,
+    status TEXT NOT NULL DEFAULT 'new',
+    used_at TIMESTAMP,
+    file_position INTEGER,  -- Новое поле для хранения позиции в файле
+    FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+);
+        
+        -- Создаем индекс для ускорения поиска по коду
+        CREATE INDEX IF NOT EXISTS idx_mark_codes_code ON mark_codes(code);
+        
+        -- Создаем индекс для поиска по task_id
+        CREATE INDEX IF NOT EXISTS idx_mark_codes_task_id ON mark_codes(task_id);
+        
+        -- Создаем индекс для поиска по статусу
+        CREATE INDEX IF NOT EXISTS idx_mark_codes_status ON mark_codes(status);
+    `)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

@@ -1,8 +1,14 @@
 package handlers
 
 import (
+	"bufio"
+	"fmt"
+	"io"
+	"log"
+	"mime/multipart"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"Factory/pkg/db"
@@ -35,7 +41,7 @@ func ShowAddTaskForm(w http.ResponseWriter, r *http.Request) {
 	templates.AddTaskForm(product, lines).Render(r.Context(), w)
 }
 
-// AddTaskHandler обрабатывает отправку формы создания задания
+// pkg/handlers/tasks.go - обновленная функция AddTaskHandler
 func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
@@ -43,7 +49,8 @@ func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := r.ParseForm(); err != nil {
+	// Используем ParseMultipartForm для поддержки загрузки файлов
+	if err := r.ParseMultipartForm(10 << 20); err != nil { // Ограничение размера файла ~10MB
 		http.Error(w, "Ошибка при обработке формы: "+err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -74,14 +81,73 @@ func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 		CreatedAt:   time.Now(),
 	}
 
-	err = db.AddTask(task)
+	// Создаем задание в базе данных
+	taskID, err := db.AddTask(task)
 	if err != nil {
 		http.Error(w, "Ошибка при создании задания: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	// Обработка загруженного файла с кодами маркировки
+	file, handler, err := r.FormFile("mark_codes")
+	if err == nil && handler != nil { // Файл был загружен
+		defer file.Close()
+
+		// Обрабатываем файл с кодами
+		codesCount, err := processMarkCodesFile(int(taskID), file)
+		if err != nil {
+			// Логгируем ошибку, но продолжаем выполнение
+			// (задание уже создано, просто не удалось загрузить коды)
+			log.Printf("Ошибка при обработке файла с кодами: %v", err)
+		} else {
+			log.Printf("Успешно загружено %d кодов маркировки для задания #%d", codesCount, taskID)
+		}
+	}
+
 	// Перенаправляем на список продуктов
 	http.Redirect(w, r, "/products", http.StatusSeeOther)
+}
+
+// Новая функция для обработки файла с кодами маркировки
+func processMarkCodesFile(taskID int, file multipart.File) (int, error) {
+	// Создаем буферизированный reader для файла
+	reader := bufio.NewReader(file)
+
+	// Читаем все строки из файла
+	var codes []string
+	for {
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			if err == io.EOF {
+				// Конец файла, добавляем последнюю строку, если она не пустая
+				line = strings.TrimSpace(line)
+				if line != "" {
+					codes = append(codes, line)
+				}
+				break
+			}
+			return 0, fmt.Errorf("ошибка чтения файла: %w", err)
+		}
+
+		// Очищаем строку от лишних пробелов и символов перевода строки
+		line = strings.TrimSpace(line)
+		if line != "" {
+			codes = append(codes, line)
+		}
+	}
+
+	// Если в файле нет кодов, сразу возвращаем 0
+	if len(codes) == 0 {
+		return 0, nil
+	}
+
+	// Добавляем коды в базу данных
+	codesAdded, err := db.AddMarkCodes(taskID, codes)
+	if err != nil {
+		return 0, fmt.Errorf("ошибка сохранения кодов в базе данных: %w", err)
+	}
+
+	return codesAdded, nil
 }
 
 // TasksListHandler обрабатывает запрос на просмотр списка заданий
@@ -161,7 +227,14 @@ func UpdateTaskStatusWebHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Ошибка при получении истории изменений задания: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+	// Получаем статистику по кодам маркировки
+	codeStats, err := db.GetMarkCodeStats(id)
+	if err != nil {
+		// Если возникла ошибка, просто логируем её и продолжаем без статистики
+		log.Printf("Ошибка при получении статистики кодов: %v", err)
+		codeStats = nil
+	}
 
 	// Возвращаем обновленный шаблон через HTMX
-	templates.TaskDetails(task, history).Render(r.Context(), w)
+	templates.TaskDetails(task, history, codeStats).Render(r.Context(), w)
 }

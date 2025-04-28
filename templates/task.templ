@@ -9,7 +9,10 @@ import (
 templ AddTaskForm(product models.Product, lines []models.ProductionLine) {
     <div class="container mx-auto p-6">
         <h1 class="text-2xl font-bold mb-6">Создание задания для продукта: {product.Name}</h1>
-        <form action={ templ.SafeURL(templ.URL(fmt.Sprintf("/products/%d/add-task", product.ID))) } method="post" class="space-y-4">
+        <form action={ templ.SafeURL(templ.URL(fmt.Sprintf("/products/%d/add-task", product.ID))) }
+              method="post"
+              class="space-y-4"
+              enctype="multipart/form-data">  // Добавили enctype для возможности загрузки файлов
             <div>
                 <label for="date" class="block text-gray-700">Дата (ДД.ММ.ГГГГ):</label>
                 <input type="text" id="date" name="date" placeholder="дд.мм.гггг" required
@@ -21,14 +24,14 @@ templ AddTaskForm(product models.Product, lines []models.ProductionLine) {
                        class="w-full p-2 border rounded" />
             </div>
 
-                        <div>
-                            <label for="line_id" class="block text-gray-700">Производственная линия:</label>
-                            <select id="line_id" name="line_id" class="w-full p-2 border rounded" required>
-                                for _, line := range lines {
-                                    <option value={ strconv.Itoa(line.ID) }>{line.Name}</option>
-                                }
-                            </select>
-                        </div>
+            <div>
+                <label for="line_id" class="block text-gray-700">Производственная линия:</label>
+                <select id="line_id" name="line_id" class="w-full p-2 border rounded" required>
+                    for _, line := range lines {
+                        <option value={ strconv.Itoa(line.ID) }>{line.Name}</option>
+                    }
+                </select>
+            </div>
 
             <div>
                 <label for="status" class="block text-gray-700">Статус:</label>
@@ -38,6 +41,20 @@ templ AddTaskForm(product models.Product, lines []models.ProductionLine) {
                     <option value="завершено">Завершено</option>
                 </select>
             </div>
+
+            <!-- Добавляем поле для загрузки файла -->
+            <div>
+                <label for="mark_codes" class="block text-gray-700">
+                    Файл с кодами маркировки (необязательно):
+                </label>
+                <input type="file" id="mark_codes" name="mark_codes"
+                       class="w-full p-2 border rounded"
+                       accept=".txt,.csv" />
+                <p class="text-sm text-gray-500 mt-1">
+                    Загрузите текстовый файл с кодами маркировки (по одному коду в строке).
+                </p>
+            </div>
+
             <div class="space-x-2">
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Создать задание</button>
                 <a href="/products" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Отмена</a>

@@ -4,11 +4,12 @@ import (
 	"Factory/pkg/db"
 	"Factory/templates"
 	"github.com/go-chi/chi/v5"
+	"log"
 	"net/http"
 	"strconv"
 )
 
-// TaskDetailsHandler обрабатывает запрос на просмотр деталей задания
+// Обновленная функция TaskDetailsHandler
 func TaskDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
@@ -30,6 +31,14 @@ func TaskDetailsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Рендерим шаблон с деталями задания и историей
-	templates.TaskDetails(task, history).Render(r.Context(), w)
+	// Получаем статистику по кодам маркировки
+	codeStats, err := db.GetMarkCodeStats(id)
+	if err != nil {
+		// Если возникла ошибка, просто логируем её и продолжаем без статистики
+		log.Printf("Ошибка при получении статистики кодов: %v", err)
+		codeStats = nil
+	}
+
+	// Рендерим шаблон с деталями задания, историей и статистикой кодов
+	templates.TaskDetails(task, history, codeStats).Render(r.Context(), w)
 }

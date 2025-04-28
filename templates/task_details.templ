@@ -6,7 +6,7 @@ import (
     "strconv"
 )
 
-templ TaskDetails(task models.Task, history []models.TaskHistory) {
+templ TaskDetails(task models.Task, history []models.TaskHistory,codeStats map[string]int) {
     <div id="task-list" class="container mx-auto p-6">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Детали задания #{strconv.Itoa(task.ID)}</h1>
@@ -122,4 +122,55 @@ templ TaskDetails(task models.Task, history []models.TaskHistory) {
             }
         </div>
     </div>
+        <!-- Добавляем блок для кодов маркировки -->
+        <div class="bg-white shadow-md rounded p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">Коды маркировки</h2>
+
+            if codeStats == nil || (codeStats["new"] == 0 && codeStats["used"] == 0 && codeStats["invalid"] == 0) {
+                <p class="text-gray-600">Для этого задания не загружены коды маркировки.</p>
+
+                <a href={ templ.SafeURL(templ.URL(fmt.Sprintf("/tasks/%d/upload-codes", task.ID))) }
+                   class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                    Загрузить коды
+                </a>
+            } else {
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-blue-700">
+                                {strconv.Itoa(codeStats["new"] + codeStats["used"] + codeStats["invalid"])}
+                            </div>
+                            <div class="text-sm text-blue-700">Всего кодов</div>
+                        </div>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-700">
+                                {strconv.Itoa(codeStats["new"])}
+                            </div>
+                            <div class="text-sm text-green-700">Доступные коды</div>
+                        </div>
+                    </div>
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-yellow-700">
+                                {strconv.Itoa(codeStats["used"])}
+                            </div>
+                            <div class="text-sm text-yellow-700">Использованные коды</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex space-x-2">
+                    <a href={ templ.SafeURL(string(fmt.Sprintf("/tasks/%d/mark-codes", task.ID))) }
+                       class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                        Просмотреть все коды
+                    </a>
+                    <a href={ templ.SafeURL(fmt.Sprintf("/tasks/%d/upload-codes", task.ID)) }
+                       class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                        Загрузить еще коды
+                    </a>
+                </div>
+            }
+        </div>
 }
