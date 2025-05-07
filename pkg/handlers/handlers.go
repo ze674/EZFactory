@@ -31,6 +31,13 @@ func SetupRoutes(r *chi.Mux) {
 	r.Post("/tasks/{taskID}/mark-codes/{codeID}/mark-invalid", MarkCodeAsInvalidHandler)
 	r.Post("/tasks/{taskID}/mark-codes/{codeID}/reset", ResetMarkCodeStatusHandler)
 
+	// Маршруты для интеграции с 1С
+	r.Get("/integration/files", IntegrationFilesListHandler)
+	r.Get("/integration/files/{id}", IntegrationFileDetailsHandler)
+	r.Post("/integration/files/{id}/create-task", CreateTaskFromIntegrationFileHandler)
+	r.Post("/integration/scan", ScanIntegrationDirectoryHandler)
+	r.Get("/integration/scan", ScanIntegrationDirectoryHandler) // Для прямого доступа по ссылке
+
 	//Маршруты для API
 	r.Route("/api", func(r chi.Router) {
 		r.Get("/tasks", api.GetTasksHandler)

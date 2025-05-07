@@ -1,0 +1,265 @@
+package templates
+
+import (
+	"Factory/pkg/models"
+	"strconv"
+)
+
+templ IntegrationFilesList(files []models.IntegrationFile) {
+	<div class="container mx-auto px-4 py-8">
+		<div class="flex justify-between items-center mb-6">
+			<h1 class="text-2xl font-bold">Входящие заявки из 1С</h1>
+			<div>
+				<a
+					href="/integration/scan"
+					class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+					hx-post="/integration/scan"
+					hx-swap="outerHTML"
+				>
+					Сканировать директорию
+				</a>
+			</div>
+		</div>
+
+		if len(files) == 0 {
+			<div class="bg-yellow-100 p-4 rounded-md mb-4">
+				<p>Нет доступных файлов из 1С. Нажмите "Сканировать директорию" для поиска новых файлов.</p>
+			</div>
+		} else {
+			<div class="overflow-x-auto">
+				<table class="min-w-full bg-white border border-gray-200">
+					<thead>
+						<tr>
+							<th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">UUID</th>
+							<th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Имя файла</th>
+							<th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GTIN</th>
+							<th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Партия</th>
+							<th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Дата</th>
+							<th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Кол-во кодов</th>
+							<th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Статус</th>
+							<th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
+						</tr>
+					</thead>
+					<tbody>
+						for i, file := range files {
+							<tr class={ evenOdd(i) }>
+								<td class="py-2 px-4 border-b border-gray-200 text-sm">{ file.UUID }</td>
+								<td class="py-2 px-4 border-b border-gray-200 text-sm">{ file.Filename }</td>
+								<td class="py-2 px-4 border-b border-gray-200 text-sm">{ file.GTIN }</td>
+								<td class="py-2 px-4 border-b border-gray-200 text-sm">{ file.BatchNumber }</td>
+								<td class="py-2 px-4 border-b border-gray-200 text-sm">{ file.Date }</td>
+								<td class="py-2 px-4 border-b border-gray-200 text-sm">{ strconv.Itoa(file.CodesCount) }</td>
+								<td class="py-2 px-4 border-b border-gray-200 text-sm">
+									{ renderFileStatus(file.Status) }
+								</td>
+								<td class="py-2 px-4 border-b border-gray-200 text-sm">
+									<a
+										href={ templ.SafeURL("/integration/files/" + strconv.Itoa(file.ID)) }
+										class="text-blue-500 hover:text-blue-700 mr-2"
+									>
+										Подробнее
+									</a>
+									if file.Status == models.FileStatusNew {
+										<a
+											href={ templ.SafeURL("/integration/files/" + strconv.Itoa(file.ID)) }
+											class="text-green-500 hover:text-green-700"
+										>
+											Создать задание
+										</a>
+									} else if file.TaskID > 0 {
+										<a
+											href={ templ.SafeURL("/tasks/" + strconv.Itoa(file.TaskID)) }
+											class="text-purple-500 hover:text-purple-700"
+										>
+											Перейти к заданию
+										</a>
+									}
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		}
+	</div>
+}
+
+templ IntegrationFileDetails(file models.IntegrationFile, product models.Product, codes []models.IntegrationCode, lines []models.ProductionLine) {
+	<div class="container mx-auto px-4 py-8">
+		<div class="flex justify-between items-center mb-6">
+			<h1 class="text-2xl font-bold">Детали файла из 1С</h1>
+			<div>
+				<a
+					href="/integration/files"
+					class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+				>
+					Вернуться к списку
+				</a>
+			</div>
+		</div>
+
+		<div class="bg-white shadow-md rounded-lg p-6 mb-6">
+			<h2 class="text-xl font-semibold mb-4">Информация о файле</h2>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+				<div>
+					<p><span class="font-medium">UUID:</span> { file.UUID }</p>
+					<p><span class="font-medium">Имя файла:</span> { file.Filename }</p>
+					<p><span class="font-medium">GTIN:</span> { file.GTIN }</p>
+					<p><span class="font-medium">Количество кодов:</span> { strconv.Itoa(file.CodesCount) }</p>
+				</div>
+				<div>
+					<p><span class="font-medium">Дата производства:</span> { file.Date }</p>
+					<p><span class="font-medium">Номер партии:</span> { file.BatchNumber }</p>
+					<p><span class="font-medium">Статус:</span> { renderFileStatus(file.Status) }</p>
+					if file.ErrorMessage != "" {
+						<p class="text-red-500"><span class="font-medium">Ошибка:</span> { file.ErrorMessage }</p>
+					}
+				</div>
+			</div>
+
+			if file.ProductID > 0 && product.ID > 0 {
+				<div class="mb-4 p-4 bg-green-50 rounded-lg">
+					<p class="text-green-700">
+						<span class="font-medium">Продукт найден в системе:</span> { product.Name } (ID: { strconv.Itoa(product.ID) })
+					</p>
+				</div>
+			} else {
+				<div class="mb-4 p-4 bg-yellow-50 rounded-lg">
+					<p class="text-yellow-700">
+						<span class="font-medium">Продукт не найден в системе.</span> При создании задания будет автоматически создан новый продукт с GTIN { file.GTIN }.
+					</p>
+				</div>
+			}
+		</div>
+
+		if file.Status == models.FileStatusNew {
+			<div class="bg-white shadow-md rounded-lg p-6 mb-6">
+				<h2 class="text-xl font-semibold mb-4">Создание задания</h2>
+
+				<form
+					action={ templ.SafeURL("/integration/files/" + strconv.Itoa(file.ID) + "/create-task") }
+					method="POST"
+				>
+					<div class="mb-4">
+						<label class="block text-gray-700 text-sm font-bold mb-2" for="line_id">
+							Производственная линия
+						</label>
+						<select
+							name="line_id"
+							id="line_id"
+							class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+							required
+						>
+							<option value="">Выберите линию</option>
+							for _, line := range lines {
+								<option value={ strconv.Itoa(line.ID) }>{ line.Name }</option>
+							}
+						</select>
+					</div>
+
+					<div class="mb-4">
+						<label class="block text-gray-700 text-sm font-bold mb-2">
+							Информация для задания (заполнено автоматически)
+						</label>
+						<div class="bg-gray-100 p-4 rounded">
+							<p><span class="font-medium">Дата:</span> { file.Date }</p>
+							<p><span class="font-medium">Номер партии:</span> { file.BatchNumber }</p>
+							<p><span class="font-medium">Количество кодов:</span> { strconv.Itoa(file.CodesCount) }</p>
+						</div>
+					</div>
+
+					<div>
+						<button
+							type="submit"
+							class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+						>
+							Создать задание
+						</button>
+					</div>
+				</form>
+			</div>
+		} else if file.TaskID > 0 {
+			<div class="bg-white shadow-md rounded-lg p-6 mb-6">
+				<h2 class="text-xl font-semibold mb-4">Информация о задании</h2>
+
+				<p class="mb-4">
+					Для этого файла уже создано задание с ID: { strconv.Itoa(file.TaskID) }
+				</p>
+
+				<a
+					href={ templ.SafeURL("/tasks/" + strconv.Itoa(file.TaskID)) }
+					class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 inline-block"
+				>
+					Перейти к заданию
+				</a>
+			</div>
+		}
+
+		<div class="bg-white shadow-md rounded-lg p-6">
+			<h2 class="text-xl font-semibold mb-4">Коды маркировки ({ strconv.Itoa(len(codes)) })</h2>
+
+			if len(codes) == 0 {
+				<p class="text-gray-500">В файле не найдено кодов маркировки.</p>
+			} else {
+				<div class="max-h-96 overflow-y-auto">
+					<table class="min-w-full bg-white border border-gray-200">
+						<thead class="sticky top-0 bg-white">
+							<tr>
+								<th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">№</th>
+								<th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Код маркировки</th>
+								<th class="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Статус</th>
+							</tr>
+						</thead>
+						<tbody>
+							for i, code := range codes {
+								<tr class={ evenOdd(i) }>
+									<td class="py-2 px-4 border-b border-gray-200 text-sm">{ strconv.Itoa(code.Position) }</td>
+									<td class="py-2 px-4 border-b border-gray-200 text-sm font-mono">{ code.Code }</td>
+									<td class="py-2 px-4 border-b border-gray-200 text-sm">
+										{ renderCodeStatus(code.Status) }
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			}
+		</div>
+	</div>
+}
+
+func renderFileStatus(status string) string {
+	switch status {
+	case models.FileStatusNew:
+		return "Новый"
+	case models.FileStatusProcessing:
+		return "В обработке"
+	case models.FileStatusCompleted:
+		return "Завершен"
+	case models.FileStatusError:
+		return "Ошибка"
+	default:
+		return status
+	}
+}
+
+func renderCodeStatus(status string) string {
+	switch status {
+	case models.IntegrationCodeStatusPending:
+		return "Ожидает"
+	case models.IntegrationCodeStatusAssigned:
+		return "Назначен"
+	case models.IntegrationCodeStatusUsed:
+		return "Использован"
+	default:
+		return status
+	}
+}
+
+func evenOdd(i int) string {
+	if i%2 == 0 {
+		return "bg-white"
+	}
+	return "bg-gray-50"
+}

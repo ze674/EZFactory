@@ -114,5 +114,67 @@ func CreateTables() error {
 		return err
 	}
 
+	_, err = DB.Exec(`
+        CREATE TABLE IF NOT EXISTS integration_files (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT NOT NULL UNIQUE,
+            filename TEXT NOT NULL,
+            file_path TEXT NOT NULL,
+            gtin TEXT NOT NULL,
+            product_id INTEGER,
+            batch_number TEXT NOT NULL,
+            date TEXT NOT NULL,
+            codes_count INTEGER NOT NULL,
+            status TEXT NOT NULL DEFAULT 'new',
+            error_message TEXT,
+            task_id INTEGER,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            processed_at TIMESTAMP,
+            FOREIGN KEY (product_id) REFERENCES products(id),
+            FOREIGN KEY (task_id) REFERENCES tasks(id)
+        )
+    `)
+	if err != nil {
+		return err
+	}
+
+	// Индексы для таблицы integration_files
+	_, err = DB.Exec(`
+        CREATE INDEX IF NOT EXISTS idx_integration_files_uuid ON integration_files(uuid);
+        CREATE INDEX IF NOT EXISTS idx_integration_files_gtin ON integration_files(gtin);
+        CREATE INDEX IF NOT EXISTS idx_integration_files_status ON integration_files(status);
+    `)
+	if err != nil {
+		return err
+	}
+
+	// Таблица кодов интеграции
+	_, err = DB.Exec(`
+        CREATE TABLE IF NOT EXISTS integration_codes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            integration_file_id INTEGER NOT NULL,
+            code TEXT NOT NULL,
+            task_id INTEGER DEFAULT 0,
+            status TEXT NOT NULL DEFAULT 'pending',
+            position INTEGER,
+            FOREIGN KEY (integration_file_id) REFERENCES integration_files(id),
+            FOREIGN KEY (task_id) REFERENCES tasks(id)
+        )
+    `)
+	if err != nil {
+		return err
+	}
+
+	// Индексы для таблицы integration_codes
+	_, err = DB.Exec(`
+        CREATE INDEX IF NOT EXISTS idx_integration_codes_file_id ON integration_codes(integration_file_id);
+        CREATE INDEX IF NOT EXISTS idx_integration_codes_task_id ON integration_codes(task_id);
+        CREATE INDEX IF NOT EXISTS idx_integration_codes_code ON integration_codes(code);
+        CREATE INDEX IF NOT EXISTS idx_integration_codes_status ON integration_codes(status);
+    `)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

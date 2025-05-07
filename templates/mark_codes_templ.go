@@ -43,7 +43,7 @@ func MarkCodesList(codes []models.MarkCode, taskID int) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(taskID))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 14, Col: 117}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 13, Col: 117}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -65,7 +65,7 @@ func MarkCodesList(codes []models.MarkCode, taskID int) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/tasks/%d", taskID)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 30, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 29, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -78,7 +78,7 @@ func MarkCodesList(codes []models.MarkCode, taskID int) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(len(codes)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 41, Col: 95}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 40, Col: 95}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -91,7 +91,7 @@ func MarkCodesList(codes []models.MarkCode, taskID int) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(countCodesByStatus(codes, models.MarkCodeStatusNew)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 48, Col: 94}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 47, Col: 94}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -104,7 +104,7 @@ func MarkCodesList(codes []models.MarkCode, taskID int) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(countCodesByStatus(codes, models.MarkCodeStatusUsed)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 56, Col: 95}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 55, Col: 95}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -132,7 +132,7 @@ func MarkCodesList(codes []models.MarkCode, taskID int) templ.Component {
 				var templ_7745c5c3_Var8 string
 				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(code.FilePosition))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 95, Col: 107}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 94, Col: 107}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
@@ -145,7 +145,7 @@ func MarkCodesList(codes []models.MarkCode, taskID int) templ.Component {
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(code.Code)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 99, Col: 54}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 98, Col: 54}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
@@ -179,7 +179,7 @@ func MarkCodesList(codes []models.MarkCode, taskID int) templ.Component {
 					var templ_7745c5c3_Var10 string
 					templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(code.UsedAt.Format("02.01.2006 15:04:05"))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 120, Col: 90}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 119, Col: 90}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 					if templ_7745c5c3_Err != nil {
@@ -203,7 +203,7 @@ func MarkCodesList(codes []models.MarkCode, taskID int) templ.Component {
 					var templ_7745c5c3_Var11 string
 					templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/tasks/%d/mark-codes/%d/mark-used", taskID, code.ID)))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 130, Col: 135}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 129, Col: 135}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 					if templ_7745c5c3_Err != nil {
@@ -216,7 +216,7 @@ func MarkCodesList(codes []models.MarkCode, taskID int) templ.Component {
 					var templ_7745c5c3_Var12 string
 					templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/tasks/%d/mark-codes/%d/mark-invalid", taskID, code.ID)))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 136, Col: 138}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 135, Col: 138}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 					if templ_7745c5c3_Err != nil {
@@ -234,7 +234,7 @@ func MarkCodesList(codes []models.MarkCode, taskID int) templ.Component {
 					var templ_7745c5c3_Var13 string
 					templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/tasks/%d/mark-codes/%d/reset", taskID, code.ID)))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 143, Col: 131}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 142, Col: 131}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 					if templ_7745c5c3_Err != nil {
@@ -312,7 +312,7 @@ func UploadCodesForm(task models.Task) templ.Component {
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/tasks/%d", task.ID)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 179, Col: 69}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 178, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -325,7 +325,7 @@ func UploadCodesForm(task models.Task) templ.Component {
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(task.ID))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 189, Col: 124}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 188, Col: 124}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {

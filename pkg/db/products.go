@@ -103,3 +103,18 @@ func UpdateLabelData(id int, labelData string) error {
 
 	return nil
 }
+
+// GetProductByGTIN находит продукт по GTIN
+func GetProductByGTIN(gtin string) (models.Product, error) {
+	query := "SELECT id, name, gtin, label_data FROM products WHERE gtin = ?"
+
+	row := DB.QueryRow(query, gtin)
+
+	var p models.Product
+	err := row.Scan(&p.ID, &p.Name, &p.GTIN, &p.LabelData)
+	if err != nil {
+		return p, err
+	}
+
+	return p, nil
+}
