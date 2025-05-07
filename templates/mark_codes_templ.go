@@ -49,200 +49,213 @@ func MarkCodesList(codes []models.MarkCode, taskID int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</h1><div class=\"flex space-x-2\"><a href=\"/tasks\" class=\"bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600\">К списку заданий</a></div></div><div class=\"bg-white shadow-md rounded p-6 mb-6\"><div class=\"flex justify-between items-center mb-4\"><h2 class=\"text-xl font-semibold\">Статистика кодов</h2><a href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</h1><div class=\"flex space-x-2\"><a href=\"/tasks\" hx-get=\"/tasks\" hx-target=\"#content\" hx-swap=\"innerHTML\" class=\"bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600\">К списку заданий</a></div></div><div class=\"bg-white shadow-md rounded p-6 mb-6\"><div class=\"flex justify-between items-center mb-4\"><h2 class=\"text-xl font-semibold\">Статистика кодов</h2><a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 templ.SafeURL = templ.SafeURL(string(fmt.Sprintf("/tasks/%d", taskID)))
+		var templ_7745c5c3_Var3 templ.SafeURL = templ.SafeURL(fmt.Sprintf("/tasks/%d", taskID))
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var3)))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" class=\"text-blue-500 hover:underline\">Вернуться к заданию</a></div><div class=\"grid grid-cols-1 md:grid-cols-3 gap-4 mb-6\"><div class=\"bg-blue-50 p-4 rounded-lg border border-blue-100\"><div class=\"text-center\"><div class=\"text-2xl font-bold text-blue-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(len(codes)))
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/tasks/%d", taskID)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 34, Col: 95}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 30, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><div class=\"text-sm text-blue-700\">Всего кодов</div></div></div><div class=\"bg-green-50 p-4 rounded-lg border border-green-100\"><div class=\"text-center\"><div class=\"text-2xl font-bold text-green-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" hx-target=\"#content\" hx-swap=\"innerHTML\" class=\"text-blue-500 hover:underline\">Вернуться к заданию</a></div><div class=\"grid grid-cols-1 md:grid-cols-3 gap-4 mb-6\"><div class=\"bg-blue-50 p-4 rounded-lg border border-blue-100\"><div class=\"text-center\"><div class=\"text-2xl font-bold text-blue-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(countCodesByStatus(codes, models.MarkCodeStatusNew)))
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(len(codes)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 41, Col: 94}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 41, Col: 95}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><div class=\"text-sm text-green-700\">Доступные коды</div></div></div><div class=\"bg-yellow-50 p-4 rounded-lg border border-yellow-100\"><div class=\"text-center\"><div class=\"text-2xl font-bold text-yellow-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><div class=\"text-sm text-blue-700\">Всего кодов</div></div></div><div class=\"bg-green-50 p-4 rounded-lg border border-green-100\"><div class=\"text-center\"><div class=\"text-2xl font-bold text-green-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(countCodesByStatus(codes, models.MarkCodeStatusUsed)))
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(countCodesByStatus(codes, models.MarkCodeStatusNew)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 49, Col: 95}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 48, Col: 94}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div><div class=\"text-sm text-yellow-700\">Использованные коды</div></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div><div class=\"text-sm text-green-700\">Доступные коды</div></div></div><div class=\"bg-yellow-50 p-4 rounded-lg border border-yellow-100\"><div class=\"text-center\"><div class=\"text-2xl font-bold text-yellow-700\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var7 string
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(countCodesByStatus(codes, models.MarkCodeStatusUsed)))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 56, Col: 95}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</div><div class=\"text-sm text-yellow-700\">Использованные коды</div></div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(codes) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"bg-gray-100 p-6 rounded-lg text-center\"><p class=\"text-gray-600\">Нет загруженных кодов маркировки для этого задания</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"bg-gray-100 p-6 rounded-lg text-center\"><p class=\"text-gray-600\">Нет загруженных кодов маркировки для этого задания</p></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"bg-white shadow-md rounded-lg overflow-hidden\"><div class=\"overflow-x-auto\"><table class=\"min-w-full bg-white\"><thead class=\"bg-gray-100\"><tr><th class=\"py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">№ в файле</th><th class=\"py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">Код маркировки</th><th class=\"py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">Статус</th><th class=\"py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">Использован</th><th class=\"py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">Действия</th></tr></thead> <tbody class=\"divide-y divide-gray-200\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"bg-white shadow-md rounded-lg overflow-hidden\"><div class=\"overflow-x-auto\"><table class=\"min-w-full bg-white\"><thead class=\"bg-gray-100\"><tr><th class=\"py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">№ в файле</th><th class=\"py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">Код маркировки</th><th class=\"py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">Статус</th><th class=\"py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">Использован</th><th class=\"py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">Действия</th></tr></thead> <tbody class=\"divide-y divide-gray-200\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, code := range codes {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<tr><td class=\"py-3 px-4 whitespace-nowrap\"><div class=\"text-sm text-gray-900\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var7 string
-				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(code.FilePosition))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 88, Col: 107}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div></td><td class=\"py-3 px-4 whitespace-nowrap\"><div class=\"text-sm font-mono bg-gray-100 p-2 rounded\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<tr><td class=\"py-3 px-4 whitespace-nowrap\"><div class=\"text-sm text-gray-900\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var8 string
-				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(code.Code)
+				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(code.FilePosition))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 92, Col: 54}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 95, Col: 107}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div></td><td class=\"py-3 px-4 whitespace-nowrap\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div></td><td class=\"py-3 px-4 whitespace-nowrap\"><div class=\"text-sm font-mono bg-gray-100 p-2 rounded\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var9 string
+				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(code.Code)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 99, Col: 54}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div></td><td class=\"py-3 px-4 whitespace-nowrap\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				if code.Status == models.MarkCodeStatusNew {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<span class=\"px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800\">Доступен</span>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<span class=\"px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800\">Доступен</span>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				} else if code.Status == models.MarkCodeStatusUsed {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<span class=\"px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800\">Использован</span>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<span class=\"px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800\">Использован</span>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				} else {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<span class=\"px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800\">Недействителен</span>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<span class=\"px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800\">Недействителен</span>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</td><td class=\"py-3 px-4 whitespace-nowrap\"><div class=\"text-sm text-gray-900\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</td><td class=\"py-3 px-4 whitespace-nowrap\"><div class=\"text-sm text-gray-900\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				if !code.UsedAt.IsZero() {
-					var templ_7745c5c3_Var9 string
-					templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(code.UsedAt.Format("02.01.2006 15:04:05"))
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 113, Col: 90}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				} else {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "-")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div></td><td class=\"py-3 px-4 whitespace-nowrap text-sm text-gray-500\"><div class=\"flex space-x-2\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				if code.Status == models.MarkCodeStatusNew {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<button hx-post=\"")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
 					var templ_7745c5c3_Var10 string
-					templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/tasks/%d/mark-codes/%d/mark-used", taskID, code.ID)))
+					templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(code.UsedAt.Format("02.01.2006 15:04:05"))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 123, Col: 135}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 120, Col: 90}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\" hx-confirm=\"Отметить код как использованный?\" class=\"text-white bg-yellow-500 hover:bg-yellow-600 px-2 py-1 rounded text-xs\">Отметить использованным</button> <button hx-post=\"")
+				} else {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "-")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div></td><td class=\"py-3 px-4 whitespace-nowrap text-sm text-gray-500\"><div class=\"flex space-x-2\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if code.Status == models.MarkCodeStatusNew {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<button hx-post=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var11 string
-					templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/tasks/%d/mark-codes/%d/mark-invalid", taskID, code.ID)))
+					templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/tasks/%d/mark-codes/%d/mark-used", taskID, code.ID)))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 129, Col: 138}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 130, Col: 135}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\" hx-confirm=\"Отметить код как недействительный?\" class=\"text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded text-xs\">Отметить недействительным</button>")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				} else {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<button hx-post=\"")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\" hx-confirm=\"Отметить код как использованный?\" class=\"text-white bg-yellow-500 hover:bg-yellow-600 px-2 py-1 rounded text-xs\">Отметить использованным</button> <button hx-post=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var12 string
-					templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/tasks/%d/mark-codes/%d/reset", taskID, code.ID)))
+					templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/tasks/%d/mark-codes/%d/mark-invalid", taskID, code.ID)))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 136, Col: 131}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 136, Col: 138}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "\" hx-confirm=\"Сбросить статус кода?\" class=\"text-white bg-blue-500 hover:bg-blue-600 px-2 py-1 rounded text-xs\">Сбросить статус</button>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\" hx-confirm=\"Отметить код как недействительный?\" class=\"text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded text-xs\">Отметить недействительным</button>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<button hx-post=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var13 string
+					templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/tasks/%d/mark-codes/%d/reset", taskID, code.ID)))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 143, Col: 131}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\" hx-confirm=\"Сбросить статус кода?\" class=\"text-white bg-blue-500 hover:bg-blue-600 px-2 py-1 rounded text-xs\">Сбросить статус</button>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div></td></tr>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</div></td></tr>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</tbody></table></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</tbody></table></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -278,43 +291,56 @@ func UploadCodesForm(task models.Task) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var13 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var13 == nil {
-			templ_7745c5c3_Var13 = templ.NopComponent
+		templ_7745c5c3_Var14 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var14 == nil {
+			templ_7745c5c3_Var14 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<div class=\"container mx-auto p-6\"><div class=\"flex justify-between items-center mb-6\"><h1 class=\"text-2xl font-bold\">Загрузка кодов маркировки</h1><div class=\"flex space-x-2\"><a href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<div class=\"container mx-auto p-6\"><div class=\"flex justify-between items-center mb-6\"><h1 class=\"text-2xl font-bold\">Загрузка кодов маркировки</h1><div class=\"flex space-x-2\"><a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var14 templ.SafeURL = templ.SafeURL(templ.URL(fmt.Sprintf("/tasks/%d", task.ID)))
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var14)))
+		var templ_7745c5c3_Var15 templ.SafeURL = templ.SafeURL(templ.URL(fmt.Sprintf("/tasks/%d", task.ID)))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var15)))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\" class=\"bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600\">Вернуться к заданию</a></div></div><div class=\"bg-white shadow-md rounded p-6\"><h2 class=\"text-xl font-semibold mb-4\">Загрузка кодов для задания #")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var15 string
-		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(task.ID))
+		var templ_7745c5c3_Var16 string
+		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(string(fmt.Sprintf("/tasks/%d", task.ID)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 179, Col: 124}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 179, Col: 69}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</h2><p class=\"text-gray-600 mb-4\">Загрузите файл с кодами маркировки. Каждый код должен быть на отдельной строке.</p><form action=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var16 templ.SafeURL = templ.SafeURL(templ.URL(fmt.Sprintf("/tasks/%d/upload-codes", task.ID)))
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var16)))
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "\" hx-target=\"#content\" hx-swap=\"innerHTML\" class=\"bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600\">Вернуться к заданию</a></div></div><div class=\"bg-white shadow-md rounded p-6\"><h2 class=\"text-xl font-semibold mb-4\">Загрузка кодов для задания #")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "\" method=\"post\" enctype=\"multipart/form-data\" class=\"space-y-4\"><div><label for=\"mark_codes\" class=\"block text-gray-700 mb-2\">Файл с кодами маркировки:</label> <input type=\"file\" id=\"mark_codes\" name=\"mark_codes\" class=\"w-full p-2 border rounded\" accept=\".txt,.csv\" required><p class=\"text-sm text-gray-500 mt-1\">Поддерживаются форматы .txt и .csv. Каждый код должен быть на отдельной строке.</p></div><div class=\"mt-4\"><button type=\"submit\" class=\"bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600\">Загрузить коды</button></div></form></div></div>")
+		var templ_7745c5c3_Var17 string
+		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(task.ID))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mark_codes.templ`, Line: 189, Col: 124}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</h2><p class=\"text-gray-600 mb-4\">Загрузите файл с кодами маркировки. Каждый код должен быть на отдельной строке.</p><form action=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var18 templ.SafeURL = templ.SafeURL(templ.URL(fmt.Sprintf("/tasks/%d/upload-codes", task.ID)))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var18)))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "\" method=\"post\" enctype=\"multipart/form-data\" class=\"space-y-4\"><div><label for=\"mark_codes\" class=\"block text-gray-700 mb-2\">Файл с кодами маркировки:</label> <input type=\"file\" id=\"mark_codes\" name=\"mark_codes\" class=\"w-full p-2 border rounded\" accept=\".txt,.csv\" required><p class=\"text-sm text-gray-500 mt-1\">Поддерживаются форматы .txt и .csv. Каждый код должен быть на отдельной строке.</p></div><div class=\"mt-4\"><button type=\"submit\" class=\"bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600\">Загрузить коды</button></div></form></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -40,5 +40,9 @@ func TaskDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Рендерим шаблон с деталями задания, историей и статистикой кодов
-	templates.TaskDetails(task, history, codeStats).Render(r.Context(), w)
+	if r.Header.Get("HX-Request") == "true" {
+		templates.TaskDetails(task, history, codeStats).Render(r.Context(), w)
+	} else {
+		templates.Page(templates.TaskDetails(task, history, codeStats)).Render(r.Context(), w)
+	}
 }

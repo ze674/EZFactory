@@ -160,7 +160,12 @@ func TasksListHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Рендерим шаблон с заданиями
-	templates.TasksList(tasks).Render(r.Context(), w)
+	if r.Header.Get("HX-Request") == "true" {
+		templates.TasksList(tasks).Render(r.Context(), w)
+	} else {
+		templates.Page(templates.TasksList(tasks)).Render(r.Context(), w)
+	}
+
 }
 
 // DeleteTaskHandler обрабатывает запрос на удаление задания

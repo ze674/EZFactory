@@ -4,7 +4,6 @@ import (
     "Factory/pkg/models"
     "strconv"
     "fmt"
-
 )
 
 // Компонент для отображения списка кодов маркировки
@@ -13,7 +12,11 @@ templ MarkCodesList(codes []models.MarkCode, taskID int) {
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Коды маркировки для задания #{strconv.Itoa(taskID)}</h1>
             <div class="flex space-x-2">
-                <a href="/tasks" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                <a href="/tasks"
+                   hx-get="/tasks"
+                   hx-target="#content"
+                   hx-swap="innerHTML"
+                   class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
                     К списку заданий
                 </a>
             </div>
@@ -22,7 +25,10 @@ templ MarkCodesList(codes []models.MarkCode, taskID int) {
         <div class="bg-white shadow-md rounded p-6 mb-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-semibold">Статистика кодов</h2>
-                <a href={ templ.SafeURL(string(fmt.Sprintf("/tasks/%d", taskID))) }
+                <a href={ templ.SafeURL(fmt.Sprintf("/tasks/%d", taskID)) }
+                   hx-get={ string(fmt.Sprintf("/tasks/%d", taskID)) }
+                   hx-target="#content"
+                   hx-swap="innerHTML"
                    class="text-blue-500 hover:underline">
                     Вернуться к заданию
                 </a>
@@ -169,6 +175,9 @@ templ UploadCodesForm(task models.Task) {
             <h1 class="text-2xl font-bold">Загрузка кодов маркировки</h1>
             <div class="flex space-x-2">
                 <a href={ templ.SafeURL(templ.URL(fmt.Sprintf("/tasks/%d", task.ID))) }
+                   hx-get={ string(fmt.Sprintf("/tasks/%d", task.ID)) }
+                   hx-target="#content"
+                   hx-swap="innerHTML"
                    class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
                     Вернуться к заданию
                 </a>
