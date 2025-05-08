@@ -45,13 +45,6 @@ func IntegrationFileDetailsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Получаем список кодов маркировки из файла
-	codes, err := db.GetIntegrationCodesByFileID(fileID)
-	if err != nil {
-		http.Error(w, "Ошибка получения списка кодов: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
 	// Получаем информацию о продукте (если найден)
 	var product models.Product
 	if file.ProductID > 0 {
@@ -69,8 +62,14 @@ func IntegrationFileDetailsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Отображаем шаблон
-	templates.IntegrationFileDetails(file, product, codes, lines).Render(r.Context(), w)
+	// Важное изменение: всегда оборачиваем контент в шаблон Page
+	if r.Header.Get("HX-Request") == "true" {
+		// Даже для HTMX-запроса возвращаем полную страницу
+		templates.Page(templates.IntegrationFileDetails(file, product, []models.IntegrationCode{}, lines)).Render(r.Context(), w)
+	} else {
+		// Для обычного запроса - также возвращаем полную страницу
+		templates.Page(templates.IntegrationFileDetails(file, product, []models.IntegrationCode{}, lines)).Render(r.Context(), w)
+	}
 }
 
 // CreateTaskFromIntegrationFileHandler обрабатывает запрос на создание задания из файла интеграции
@@ -164,20 +163,24 @@ func CreateTaskFromIntegrationFileHandler(w http.ResponseWriter, r *http.Request
 		http.Error(w, "Ошибка при связывании файла с заданием: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-
+	fmt.Println("Назначение кодов заданию")
 	// Назначаем коды заданию
 	err = db.AssignCodesToTask(fileID, int(taskID))
 	if err != nil {
 		http.Error(w, "Ошибка при назначении кодов заданию: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+	fmt.Println("Коды назначены")
 
+	fmt.Println("Копируем коды из таблицы integration_codes в mark_codes")
 	// Копируем коды из таблицы integration_codes в mark_codes
 	_, err = db.CopyCodesFromIntegrationToMarkCodes(int(taskID))
 	if err != nil {
 		http.Error(w, "Ошибка при копировании кодов: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	fmt.Println("Коды скопированы")
 
 	// Перенаправляем на страницу задания
 	http.Redirect(w, r, fmt.Sprintf("/tasks/%d", taskID), http.StatusSeeOther)
@@ -192,6 +195,19 @@ func ScanIntegrationDirectoryHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Перенаправляем на список файлов
-	http.Redirect(w, r, "/integration/files", http.StatusSeeOther)
+	// Получаем список файлов
+	files, err := db.GetIntegrationFiles()
+	if err != nil {
+		http.Error(w, "Ошибка получения списка файлов: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Проверяем, был ли это HTMX-запрос
+	if r.Header.Get("HX-Request") == "true" {
+		// Для HTMX-запроса отображаем всю страницу, а не только список
+		templates.Page(templates.IntegrationFilesList(files)).Render(r.Context(), w)
+	} else {
+		// Для обычного запроса - перенаправляем на страницу со списком файлов
+		http.Redirect(w, r, "/integration/files", http.StatusSeeOther)
+	}
 }

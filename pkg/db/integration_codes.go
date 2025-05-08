@@ -163,67 +163,28 @@ func AssignCodesToTask(fileID int, taskID int) error {
 	return err
 }
 
-// CopyCodesFromIntegrationToMarkCodes копирует коды из integration_codes в mark_codes
+// CopyCodesFromIntegrationToMarkCodes копирует коды из integration_codes в mark_codes одним запросом
 func CopyCodesFromIntegrationToMarkCodes(taskID int) (int, error) {
-	// Получаем коды интеграции, назначенные заданию
+	// Используем один SQL-запрос для копирования всех кодов
 	query := `
-		SELECT code, position
-		FROM integration_codes
-		WHERE task_id = ? AND status = ?
-	`
+        INSERT INTO mark_codes (task_id, code, status, file_position)
+        SELECT ?, code, ?, position
+        FROM integration_codes
+        WHERE task_id = ? AND status = ?
+    `
 
-	rows, err := DB.Query(query, taskID, models.IntegrationCodeStatusAssigned)
-	if err != nil {
-		return 0, err
-	}
-	defer rows.Close()
-
-	// Начинаем транзакцию для повышения производительности
-	tx, err := DB.Begin()
+	result, err := DB.Exec(query, taskID, models.MarkCodeStatusNew, taskID, models.IntegrationCodeStatusAssigned)
 	if err != nil {
 		return 0, err
 	}
 
-	// Подготавливаем запрос для повторного использования
-	stmt, err := tx.Prepare(`
-		INSERT INTO mark_codes (task_id, code, status, file_position)
-		VALUES (?, ?, ?, ?)
-	`)
-	if err != nil {
-		tx.Rollback()
-		return 0, err
-	}
-	defer stmt.Close()
-
-	// Счетчик добавленных кодов
-	added := 0
-
-	// Добавляем каждый код
-	for rows.Next() {
-		var code string
-		var position int
-
-		err := rows.Scan(&code, &position)
-		if err != nil {
-			tx.Rollback()
-			return 0, err
-		}
-
-		_, err = stmt.Exec(taskID, code, models.MarkCodeStatusNew, position)
-		// Если код уже существует, пропускаем его и продолжаем
-		if err != nil {
-			continue
-		}
-		added++
-	}
-
-	// Фиксируем транзакцию
-	err = tx.Commit()
+	// Получаем количество добавленных строк
+	affected, err := result.RowsAffected()
 	if err != nil {
 		return 0, err
 	}
 
-	return added, nil
+	return int(affected), nil
 }
 
 // UpdateIntegrationCodeStatus обновляет статус кода интеграции

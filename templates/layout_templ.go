@@ -29,7 +29,7 @@ func Nav() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<nav class=\"bg-gray-800 p-4\"><div class=\"container mx-auto flex space-x-4\"><a href=\"/\" hx-get=\"/\" hx-target=\"#content\" hx-push-url=\"true\" class=\"text-white hover:text-gray-300\">Главная</a> <a href=\"/products\" hx-get=\"/products\" hx-target=\"#content\" hx-push-url=\"true\" class=\"text-white hover:text-gray-300\">Виды продукции</a> <a href=\"/tasks\" hx-get=\"/tasks\" hx-target=\"#content\" hx-push-url=\"true\" class=\"text-white hover:text-gray-300\">Задания</a> <a href=\"/integration/files\" class=\"hover:text-indigo-200\">Входящие заявки</a><!-- Новая ссылка --></div></nav>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<nav class=\"bg-gray-800 p-4\"><div class=\"container mx-auto flex space-x-4\"><a href=\"/\" hx-get=\"/\" hx-target=\"#content\" hx-push-url=\"true\" class=\"text-white hover:text-gray-300\">Главная</a> <a href=\"/products\" hx-get=\"/products\" hx-target=\"#content\" hx-push-url=\"true\" class=\"text-white hover:text-gray-300\">Виды продукции</a> <a href=\"/tasks\" hx-get=\"/tasks\" hx-target=\"#content\" hx-push-url=\"true\" class=\"text-white hover:text-gray-300\">Задания</a> <a href=\"/integration/files\" hx-get=\"/integration/files\" hx-target=\"#content\" hx-push-url=\"true\" class=\"text-white hover:text-gray-300\">Входящие заявки</a><!-- Новая ссылка --></div></nav>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -2,6 +2,7 @@ package db
 
 import (
 	"Factory/pkg/models"
+	"database/sql"
 	"time"
 )
 
@@ -44,7 +45,9 @@ func GetIntegrationFileByID(id int) (models.IntegrationFile, error) {
 	`
 
 	var file models.IntegrationFile
-	var productID, taskID, processedAt interface{}
+	var productID sql.NullInt64
+	var taskID sql.NullInt64
+	var processedAt sql.NullString
 	var createdAt string
 
 	err := DB.QueryRow(query, id).Scan(
@@ -57,12 +60,12 @@ func GetIntegrationFileByID(id int) (models.IntegrationFile, error) {
 	}
 
 	// Обработка NULL значений
-	if productID != nil {
-		file.ProductID = productID.(int)
+	if productID.Valid {
+		file.ProductID = int(productID.Int64)
 	}
 
-	if taskID != nil {
-		file.TaskID = taskID.(int)
+	if taskID.Valid {
+		file.TaskID = int(taskID.Int64)
 	}
 
 	// Преобразование строки времени в time.Time
@@ -71,10 +74,10 @@ func GetIntegrationFileByID(id int) (models.IntegrationFile, error) {
 		file.CreatedAt = time.Now()
 	}
 
-	if processedAt != nil {
-		pTime, err := time.Parse("2006-01-02 15:04:05", processedAt.(string))
-		if err == nil {
-			file.ProcessedAt = pTime
+	if processedAt.Valid {
+		file.ProcessedAt, err = time.Parse("2006-01-02 15:04:05", processedAt.String)
+		if err != nil {
+			file.ProcessedAt = time.Time{}
 		}
 	}
 
@@ -147,7 +150,9 @@ func GetIntegrationFiles() ([]models.IntegrationFile, error) {
 
 	for rows.Next() {
 		var file models.IntegrationFile
-		var productID, taskID, processedAt interface{}
+		var productID sql.NullInt64
+		var taskID sql.NullInt64
+		var processedAt sql.NullString
 		var createdAt string
 
 		err := rows.Scan(
@@ -160,12 +165,12 @@ func GetIntegrationFiles() ([]models.IntegrationFile, error) {
 		}
 
 		// Обработка NULL значений
-		if productID != nil {
-			file.ProductID = productID.(int)
+		if productID.Valid {
+			file.ProductID = int(productID.Int64)
 		}
 
-		if taskID != nil {
-			file.TaskID = taskID.(int)
+		if taskID.Valid {
+			file.TaskID = int(taskID.Int64)
 		}
 
 		// Преобразование строки времени в time.Time
@@ -174,10 +179,10 @@ func GetIntegrationFiles() ([]models.IntegrationFile, error) {
 			file.CreatedAt = time.Now()
 		}
 
-		if processedAt != nil {
-			pTime, err := time.Parse("2006-01-02 15:04:05", processedAt.(string))
-			if err == nil {
-				file.ProcessedAt = pTime
+		if processedAt.Valid {
+			file.ProcessedAt, err = time.Parse("2006-01-02 15:04:05", processedAt.String)
+			if err != nil {
+				file.ProcessedAt = time.Time{}
 			}
 		}
 

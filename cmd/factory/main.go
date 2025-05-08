@@ -4,6 +4,7 @@ import (
 	"Factory/pkg/db"
 	"Factory/pkg/handlers"
 	"Factory/pkg/integration"
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"log"
@@ -12,6 +13,14 @@ import (
 )
 
 func main() {
+	dbFilePath := "./factory.db"
+	if _, err := os.Stat(dbFilePath); err == nil {
+		fmt.Println("Удаление существующей базы данных...")
+		err := os.Remove(dbFilePath)
+		if err != nil {
+			log.Fatalf("Ошибка при удалении файла базы данных: %v", err)
+		}
+	}
 	if err := db.Init(); err != nil {
 		log.Fatal("Failed to initialize database: ", err)
 	}
